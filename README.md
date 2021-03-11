@@ -13,7 +13,7 @@ You need to use Python.
 * Presenting the subject to the class on March 30th, 2021 during the class and tutorial times (more
 than one session).
 
-# Course's evaluation for the project:
+# Course's Project Evaluation:
 * Task definition: is the task precisely defined and is the motivation clear? does the world
 somehow become a better place if your project were successful?
 * Approach: did you describe the used methods clearly, with good justification, and testing?
