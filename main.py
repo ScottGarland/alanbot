@@ -5,7 +5,7 @@ stemmer = LancasterStemmer()
 nltk.download()
 import numpy
 import tflearn
-import tensorflow
+from tensorflow.python.framework import ops
 import random
 import json
 import pickle
@@ -26,14 +26,14 @@ def bagOWords(string,words):
 def start():
     print('Welcome to Alan, Here you can begin your converstaion.(Enter "exit" to quit)')
     while True:
-        input =input("User: ")
-        if input.lower()=="exit":
+        inp =input("User: ")
+        if inp.lower()=="exit":
             break
 
-        conclusion=model.predict([bagOWords(input,words)])
+        conclusion=model.predict([bagOWords(inp,words)])
         conclusionIndex = numpy.argmax(conclusion)
         tag = labels[conclusionIndex]
-        for x in data["libray"]:
+        for x in data["Library"]:
             if x['tag'] == tag:
                 responses =x['responses']
 
@@ -97,7 +97,7 @@ except:
 learning = numpy.array(learning)
 output = numpy.array(output)
 
-tensorflow.reset_default_graph()
+ops.reset_default_graph()
 
 net = tflearn.input_data(shape=[None, len(learning[0])])
 net = tflearn.fully_connected(net, 8)
@@ -106,12 +106,10 @@ net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
 net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
-try:
-    model.load("ChatbotModel.tflearn")
-except:
-    model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
 
-    model.save("ChatbotModel.tflearn")
+model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
+
+model.save("ChatbotModel.tflearn")
 
 
 
