@@ -1,6 +1,9 @@
 # chatbot
 Third year AI project for an introductory course at Ontario Tech. This project uses the popular Anaconda distribution of Python.
 
+# Datasets
+* http://convai.io/data/
+
 # Course Project Deliverables:
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
 the system and the scope of the project. What is your evaluation metric for success? Collect
