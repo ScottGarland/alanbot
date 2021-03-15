@@ -51,7 +51,8 @@
       "patterns":["What are you playing","what games?"],
       "responses":["currently playing minesweeper","rocket league"],
       "context_set":""
-    },
+    }
+  ]
 
 
 
