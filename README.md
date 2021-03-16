@@ -14,12 +14,12 @@ https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubun
 ### Next,
 Install the latest distribution of Anaconda making note of its installation location and add it to your PATH variable. Once installed, navigate to the chatbot root directory and execute these commands for the chatbot project:<br />
 
-`conda create -n chatbot python=3.6`<br />
-`conda activate chatbot`<br />
-`pip install numpy nltk tensorflow tflearn`<br />
-`python main.py`<br />
+`conda create -n chatbot python=3.6` <br />
+`conda activate chatbot` OR `conda activate chatbot` <br />
+`pip install numpy nltk tensorflow tflearn` <br />
+`python main.py` <br />
 
-Command to deactivate environment: `conda deactivate`<br />
+Command to deactivate environment: `conda deactivate` <br />
 
 # Public Datasets
 * http://convai.io/data/
