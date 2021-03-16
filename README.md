@@ -1,7 +1,7 @@
 # chatbot
 Third year AI project for an introductory course at Ontario Tech. This project uses the popular Anaconda distribution of Python.
 
-#Setup
+# Setup
 Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. <br />
 https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0 <br /><br />
 
