@@ -5,7 +5,7 @@ Third year AI project for an introductory course at Ontario Tech. This project u
 Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. <br />
 https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0 <br />
 
-Install the latest distribution of Anaconda making note of its installation location and add it to your PATH variable. Once installed, navigate to the source directory and execute these commands for the chatbot project:<br />
+Install the latest distribution of Anaconda making note of its installation location and add it to your PATH variable. Once installed, navigate to the chatbot source directory and execute these commands for the chatbot project:<br />
 
 `conda create -n chatbot python=3.6`<br />
 `conda activate chatbot`<br />
