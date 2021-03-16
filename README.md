@@ -2,12 +2,12 @@
 Third year AI project for an introductory course at Ontario Tech. This project uses the popular Anaconda distribution of Python.
 
 # Setup
-## Windows 10
+### Windows 10
 Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. <br />
 https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0 <br />
 https://www.anaconda.com/products/individual#windows <br />
 
-# Ubuntu 18.04
+### Ubuntu 18.04
 https://releases.ubuntu.com/18.04/ <br />
 https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart <br />
 
