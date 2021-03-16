@@ -26,3 +26,6 @@ and reported concrete results?
 way they did? Do you show concrete examples?
 * Extra credit: does the project present interesting and novel ideas (i.e., would this be publishable
 at a good conference)?
+
+# Resources
+Tech with Tim: https://www.youtube.com/watch?v=wypVcNIH6D4&list=PLzMcBGfZo4-ndH9FoC4YWHGXG5RZekt-Q
