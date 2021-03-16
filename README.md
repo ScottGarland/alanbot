@@ -14,7 +14,7 @@ Install the latest distribution of Anaconda making note of its installation loca
 
 Command to deactivate environment: `conda deactivate`<br />
 
-# Datasets
+# Public Datasets
 * http://convai.io/data/
 
 # Course Project Deliverables:
