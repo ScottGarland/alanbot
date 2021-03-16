@@ -6,7 +6,6 @@
       "patterns": ["Hi","Hello","How are you"],
       "responses":["Hello","Hi, I'm Alan "],
       "context_set":""
-
     },
     {
       "tag":"closing",
@@ -32,22 +31,26 @@
       "responses":["I am doing well and you?","everything is fine on my end, what about yours?"],
       "context_set":""
     },
-    {"tag":"like",
+    {
+      "tag":"like",
       "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?"],
       "responses":["I like to talk with new people and gain new experiences, what about you?","I like to learn new words and play games","My hobbies are playing games and learning new things"],
       "context_set":""
     },
-    {"tag":"games",
+    {
+      "tag":"games",
       "patterns":["What do you like playing?","what games?","What games do you like playing?","what do you play?","what games have you played"],
       "responses":["I have played rocket league, witcher 3 and nier automata to name a few","rocket league, witcher 3, nier automata and hades","I like playing all types of games like rocket league, witcher 3, hades and nier automata, what about you?"],
       "context_set":""
     },
-    {"tag":"action",
+    {
+      "tag":"action",
       "patterns":["what are you doing?","what are you up to?","are you doing anything?","anything going on?"],
       "responses":["Nothing much really, what about you?","currently just chilling","Just vibing","just playing games"],
       "context_set":""
     },
-    {"tag":"playing",
+    {
+      "tag":"playing",
       "patterns":["What are you playing","what games?"],
       "responses":["currently playing minesweeper","rocket league"],
       "context_set":""
