@@ -164,11 +164,5 @@ ChatLog.place(x=6,y=6, height=586, width=570)
 EntryBox.place(x=128, y=601, height=90, width=465)
 SendButton.place(x=3, y=601, height=90)
 base.mainloop()
-with open('datasets\data_intermediate.json') as fp:
-    data1=json.load(fp)
-print(data1["dialog"]["id"][])
-if data1["dialog"]["id"]==0:
-    print(data1["dialog"]["id"])
-
 
 #start()
