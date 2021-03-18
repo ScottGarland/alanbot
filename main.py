@@ -11,6 +11,7 @@ import json
 import pickle
 import tkinter
 from tkinter import  *
+import time
 
 def send():
     msg =EntryBox.get("1.0",'end-1c').strip()
@@ -20,6 +21,7 @@ def send():
         ChatLog.insert(END,"You: "+msg + '\n\n')
         ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
         res = start(msg)
+        #time.sleep(random.randint(1, 3))
         ChatLog.insert(END,"Alan: "+ res +'\n\n')
         ChatLog.config(state=DISABLED)
         ChatLog.yview(END)
@@ -163,6 +165,7 @@ scrollbar.place(x=576,y=6, height=586)
 ChatLog.place(x=6,y=6, height=586, width=570)
 EntryBox.place(x=128, y=601, height=90, width=465)
 SendButton.place(x=3, y=601, height=90)
+
 base.mainloop()
 
 #start()
