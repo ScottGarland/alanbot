@@ -9,6 +9,20 @@ from tensorflow.python.framework import ops
 import random
 import json
 import pickle
+import tkinter
+from tkinter import  *
+
+def send():
+    msg =EntryBox.get("1.0",'end-1c').strip()
+    EntryBox.delete("0.0",END)
+    if msg !='':
+        ChatLog.config(state=NORMAL)
+        ChatLog.insert(END,"You: "+msg + '\n\n')
+        ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
+        res = start(msg)
+        ChatLog.insert(END,"Alan: "+ res +'\n\n')
+        ChatLog.config(state=DISABLED)
+        ChatLog.yview(END)
 
 def bagOWords(string,words):
     bag=[0 for _ in range(len(words))]
@@ -23,21 +37,34 @@ def bagOWords(string,words):
 
 
 
-def start():
-    print('Welcome to Alan, Here you can begin your converstaion.(Enter "exit" to quit)')
-    while True:
-        inp =input("User: ")
-        if inp.lower()=="exit":
-            break
-
-        conclusion=model.predict([bagOWords(inp,words)])
-        conclusionIndex = numpy.argmax(conclusion)
-        tag = labels[conclusionIndex]
+def start(msg):
+    # print('Welcome to Alan, Here you can begin your converstaion.(Enter "exit" to quit)')
+    # while True:
+    #     inp =input("User: ")
+    #     if inp.lower()=="exit":
+    #         break
+    #
+    #     conclusion=model.predict([bagOWords(inp,words)])
+    #     conclusionIndex = numpy.argmax(conclusion)
+    #     tag = labels[conclusionIndex]
+    #     for x in data["Library"]:
+    #         if x['tag'] == tag:
+    #             responses =x['responses']
+    #
+    #     print(random.choice(responses))
+    msg = msg.lower()
+    conclusion=model.predict([bagOWords(msg,words)])[0]
+    conclusionIndex = numpy.argmax(conclusion)
+    tag = labels[conclusionIndex]
+    print(conclusion[conclusionIndex])
+    if conclusion[conclusionIndex]>0.7:
         for x in data["Library"]:
             if x['tag'] == tag:
                 responses =x['responses']
+        return random.choice(responses)
+    else:
+        return "Sorry I do not understand"
 
-        print(random.choice(responses))
 
 #Open json file
 with open('library.json') as fp:
@@ -110,7 +137,38 @@ model = tflearn.DNN(net)
 model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
 
 model.save("ChatbotModel.tflearn")
+base=Tk()
+base.title("Alan Turing")
+base.geometry("600x700")
+base.resizable(width=FALSE, height=FALSE)
+
+ChatLog = Text(base, bd=0, bg="white", height="8", width="50", font="Arial",)
+ChatLog.config(state=DISABLED)
+
+scrollbar = Scrollbar(base, command=ChatLog.yview, cursor="heart")
+ChatLog['yscrollcommand'] = scrollbar.set
+
+SendButton = Button(base, font=("Verdana",12,'bold'), text="Send", width="12", height=5,
+                    bd=0, bg="#32de97", activebackground="#3c9d9b",fg='#ffffff',
+                    command= send )
+
+EntryBox = Text(base, bd=0, bg="white",width="29", height="5", font="Arial")
+
+ChatLog.config(state=NORMAL)
+ChatLog.insert(END,"Welcome to Alan, Here you can begin your converstaion.\n\n")
+ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
+ChatLog.config(state=DISABLED)
+ChatLog.yview(END)
+scrollbar.place(x=576,y=6, height=586)
+ChatLog.place(x=6,y=6, height=586, width=570)
+EntryBox.place(x=128, y=601, height=90, width=465)
+SendButton.place(x=3, y=601, height=90)
+base.mainloop()
+with open('datasets\data_intermediate.json') as fp:
+    data1=json.load(fp)
+print(data1["dialog"]["id"][])
+if data1["dialog"]["id"]==0:
+    print(data1["dialog"]["id"])
 
 
-
-start()
+#start()

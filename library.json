@@ -27,7 +27,7 @@
     },
     {
       "tag":"talk",
-      "patterns":["how are you","how are you doing","how are you doing"],
+      "patterns":["how are you","how are you doing","how are you doing","how are you","how are you","how are you","how are you"],
       "responses":["I am doing well and you?","everything is fine on my end, what about yours?"],
       "context_set":""
     },
