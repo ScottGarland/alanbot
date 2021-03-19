@@ -15,14 +15,14 @@ import time
 
 import discord, random
 from discord.ext import commands
-from imgurpython import ImgurClient
+
 
 TOKEN = 'PLACEHOLDER'
 bot = commands.Bot(command_prefix = '!')
 
 client_id = 'PLACEHOLDER'
 client_secret = 'PLACEHOLDER'
-client = ImgurClient(client_id, client_secret)
+
 
 def send():
     msg =EntryBox.get("1.0",'end-1c').strip()
@@ -56,14 +56,14 @@ def start(msg):
     #     inp =input("User: ")
     #     if inp.lower()=="exit":
     #         break
-    
+
     #     conclusion=model.predict([bagOWords(inp,words)])
     #     conclusionIndex = numpy.argmax(conclusion)
     #     tag = labels[conclusionIndex]
     #     for x in data["Library"]:
     #         if x['tag'] == tag:
     #             responses =x['responses']
-    
+
     #     print(random.choice(responses))
     msg = msg.lower()
     conclusion=model.predict([bagOWords(msg,words)])[0]
