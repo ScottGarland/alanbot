@@ -157,4 +157,4 @@ async def talk(ctx, *, question):
         await ctx.send(f'{res}')
 
 
-client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.nghNJQa-VeHJf63vLZiDF_aNVOY')
+client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.bBtjqHM6HgR8xrPi0lXMhVAHDQ4')
