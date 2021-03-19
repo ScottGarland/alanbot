@@ -141,6 +141,35 @@ model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
 
 model.save("ChatbotModel.tflearn")
 
+base=Tk()
+base.title("Alan Turing")
+base.geometry("600x700")
+base.resizable(width=FALSE, height=FALSE)
+
+ChatLog = Text(base, bd=0, bg="white", height="8", width="50", font="Arial",)
+ChatLog.config(state=DISABLED)
+
+scrollbar = Scrollbar(base, command=ChatLog.yview, cursor="heart")
+ChatLog['yscrollcommand'] = scrollbar.set
+
+SendButton = Button(base, font=("Verdana",12,'bold'), text="Send", width="12", height=5,
+                    bd=0, bg="#32de97", activebackground="#3c9d9b",fg='#ffffff',
+                    command= send )
+
+EntryBox = Text(base, bd=0, bg="white",width="29", height="5", font="Arial")
+
+ChatLog.config(state=NORMAL)
+ChatLog.insert(END,"Welcome to Alan, Here you can begin your converstaion.\n\n")
+ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
+ChatLog.config(state=DISABLED)
+ChatLog.yview(END)
+scrollbar.place(x=576,y=6, height=586)
+ChatLog.place(x=6,y=6, height=586, width=570)
+EntryBox.place(x=128, y=601, height=90, width=465)
+SendButton.place(x=3, y=601, height=90)
+
+
+
 #start()
 
 client = commands.Bot(command_prefix = '.')
@@ -157,4 +186,5 @@ async def talk(ctx, *, question):
         await ctx.send(f'{res}')
 
 
-client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.bBtjqHM6HgR8xrPi0lXMhVAHDQ4')
+client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.XLvGeE2kX9LxBFwEFCQNNvV3Rhw') #comment out if you want to use UI
+base.mainloop() #comment out if you want to run on discord
