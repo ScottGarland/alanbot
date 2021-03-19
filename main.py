@@ -1,8 +1,11 @@
 #Importing librarys
+import discord
+from discord.ext import commands
+
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
-#nltk.download()
+nltk.download()
 import numpy
 import tflearn
 from tensorflow.python.framework import ops
@@ -11,18 +14,6 @@ import json
 import pickle
 import tkinter
 from tkinter import  *
-import time
-
-import discord, random
-from discord.ext import commands
-
-
-TOKEN = 'PLACEHOLDER'
-bot = commands.Bot(command_prefix = '!')
-
-client_id = 'PLACEHOLDER'
-client_secret = 'PLACEHOLDER'
-
 
 def send():
     msg =EntryBox.get("1.0",'end-1c').strip()
@@ -32,7 +23,6 @@ def send():
         ChatLog.insert(END,"You: "+msg + '\n\n')
         ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
         res = start(msg)
-        #time.sleep(random.randint(1, 3))
         ChatLog.insert(END,"Alan: "+ res +'\n\n')
         ChatLog.config(state=DISABLED)
         ChatLog.yview(END)
@@ -56,14 +46,14 @@ def start(msg):
     #     inp =input("User: ")
     #     if inp.lower()=="exit":
     #         break
-
+    #
     #     conclusion=model.predict([bagOWords(inp,words)])
     #     conclusionIndex = numpy.argmax(conclusion)
     #     tag = labels[conclusionIndex]
     #     for x in data["Library"]:
     #         if x['tag'] == tag:
     #             responses =x['responses']
-
+    #
     #     print(random.choice(responses))
     msg = msg.lower()
     conclusion=model.predict([bagOWords(msg,words)])[0]
@@ -150,45 +140,21 @@ model = tflearn.DNN(net)
 model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
 
 model.save("ChatbotModel.tflearn")
-base=Tk()
-base.title("Alan Turing")
-base.geometry("600x700")
-base.resizable(width=FALSE, height=FALSE)
-
-ChatLog = Text(base, bd=0, bg="white", height="8", width="50", font="Arial",)
-ChatLog.config(state=DISABLED)
-
-scrollbar = Scrollbar(base, command=ChatLog.yview, cursor="heart")
-ChatLog['yscrollcommand'] = scrollbar.set
-
-SendButton = Button(base, font=("Verdana",12,'bold'), text="Send", width="10", height=5,
-                    bd=0, bg="#32de97", activebackground="#3c9d9b",fg='#ffffff',
-                    command= send )
-
-EntryBox = Text(base, bd=0, bg="white",width="29", height="5", font="Arial")
-
-ChatLog.config(state=NORMAL)
-ChatLog.insert(END,"Welcome to Alan. Here you can begin your conversation.\n\n")
-ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
-ChatLog.config(state=DISABLED)
-ChatLog.yview(END)
-scrollbar.place(x=576,y=6, height=586)
-ChatLog.place(x=6,y=6, height=586, width=570)
-EntryBox.place(x=128, y=601, height=90, width=465)
-SendButton.place(x=3, y=601, height=90)
-
-base.mainloop()
 
 #start()
 
-# DISCORD BOT TESTING
-# This executes after everything else.
-@bot.event
+client = commands.Bot(command_prefix = '.')
+
+@client.event
 async def on_ready():
-    print('chatbot is ready.')
+    print('Bot is ready.')
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send('pong!')
+@client.command(aliases=['speak'])
+async def talk(ctx, *, question):
+    msg =question
+    if msg !='':
+        res = start(msg)
+        await ctx.send(f'{res}')
 
-bot.run(TOKEN)
+
+client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.nghNJQa-VeHJf63vLZiDF_aNVOY')
