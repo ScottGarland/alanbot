@@ -1,5 +1,7 @@
 ChatbotModel*
 checkpoint*
+alanbot/datasets
+alanbot/2015-01.bd
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
