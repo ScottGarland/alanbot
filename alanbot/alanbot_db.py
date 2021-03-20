@@ -9,7 +9,7 @@ BIN_SIZE = 50
 
 timeframe = '2015-01'
 sql_transaction = [] # instead of inserting rows one by one, we can use this for a large transaction
-connection = sqlite3.connect('{}.bd'.format(timeframe)) # database with 2015-01 as the title
+connection = sqlite3.connect('{}.db'.format(timeframe)) # database with 2015-01 as the title
 curs = connection.cursor()
 
 
@@ -125,8 +125,8 @@ if __name__ == '__main__':
     row_counter = 0 # each row
     paired_rows = 0 # parent-child pair
 
-    with open('datasets/RC_2015-01', buffering=1000) as f:
-        for row in f:
+    with open('datasets/RC_2015-01', buffering=1000) as fp:
+        for row in fp:
             #print(row) # you can use this line to make sure the data is being accessed correctly and outputting to
 
             row_counter += 1
