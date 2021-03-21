@@ -67,6 +67,6 @@ way they did? Do you show concrete examples?
 at a good conference)?
 
 # Resources
-Tech with Tim: https://www.youtube.com/watch?v=wypVcNIH6D4&list=PLzMcBGfZo4-ndH9FoC4YWHGXG5RZekt-Q
-Sentdex: https://pythonprogramming.net/chatbot-deep-learning-python-tensorflow/
-Reddit Dataset Thread: https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/
+Tech with Tim: https://www.youtube.com/watch?v=wypVcNIH6D4&list=PLzMcBGfZo4-ndH9FoC4YWHGXG5RZekt-Q <br />
+Sentdex: https://pythonprogramming.net/chatbot-deep-learning-python-tensorflow/ <br />
+Reddit Dataset Thread: https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/ <br />
