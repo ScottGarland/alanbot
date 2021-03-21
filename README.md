@@ -5,6 +5,11 @@ Third year AI project for an introductory course at Ontario Tech. This project u
 ### For Windows 10
 Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. <br />
 https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0 <br />
+
+Download and install the latest CUDA Toolkit
+https://developer.nvidia.com/cuda-downloads <br />
+
+Windows Anaconda
 https://www.anaconda.com/products/individual#windows <br />
 
 ### For Ubuntu 18.04
@@ -17,12 +22,24 @@ Install the latest distribution of Anaconda making note of its installation loca
 `conda create -n chatbot python=3.6` <br />
 `conda activate chatbot` OR `activate chatbot` <br />
 `pip install -r requirements.txt` <br />
-`python main.py` <br />
+`conda deactivate` to deactivate the environment. <br /><br />
 
-Command to deactivate environment: `conda deactivate` <br />
+To run the initial chatbot prototype, run this in the root directory: <br />
+`conda activate chatbot` OR `activate chatbot` <br />
+`python main.py` <br /><br />
 
-# Public Datasets
-* http://convai.io/data/
+For the build based on Neural Machine Translation (NMT) for the training model, change directory to `alanbot` <br />
+`cd alanbot` <br />
+`git clone --recursive https://github.com/daniel-kukiela/nmt-chatbot` <br /><br />
+
+This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `/alanbot/raw_data`. While in the `alanbot` directory, use these next commands to prepare and process the data for training. <br />
+`python alanbot_db.py` Builds the database. <br />
+`python prep_training_data.py` <br />
+Take the `train.from` and `train.to` files in the root directory and paste them into the `alanbot/nmt-chatbot/new_data` directory, replacing the existing sample data with this project's generated data. <br />
+Change directories to the `alanbot/nmt-chatbot/setup` folder. <br />
+`python prepare_data.py` <br />
+`cd ../` <br />
+`python train.py` <br /><br />
 
 # Course Project Deliverables:
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of

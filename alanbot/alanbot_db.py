@@ -125,7 +125,7 @@ if __name__ == '__main__':
     row_counter = 0 # each row
     paired_rows = 0 # parent-child pair
 
-    with open('datasets/RC_2015-01', buffering=1000) as fp:
+    with open('raw_data/RC_2015-01', buffering=1000) as fp:
         for row in fp:
             #print(row) # you can use this line to make sure the data is being accessed correctly and outputting to
 
