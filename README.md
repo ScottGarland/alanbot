@@ -28,18 +28,20 @@ To run the initial chatbot prototype, run this in the root directory: <br />
 `conda activate chatbot` OR `activate chatbot` <br />
 `python main.py` <br />
 
-For the build based on Neural Machine Translation (NMT) for the training model, change directory to `alanbot` <br />
-`cd alanbot` <br />
+For the build based on Neural Machine Translation (NMT) for the training model, change directory to `alanbot`: <br />
+`cd alanbo/t` <br />
 `git clone --recursive https://github.com/daniel-kukiela/nmt-chatbot`
 
 This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `/alanbot/raw_data`. While in the `alanbot` directory, use these next commands to prepare and process the data for training: <br /><br />
 `python alanbot_db.py` Builds the database. <br />
 `python prep_training_data.py` <br /> <br />
-Take the `train.from` and `train.to` files in the root directory and paste them into the `alanbot/nmt-chatbot/new_data` directory, replacing the existing sample data with this project's generated data. <br /> <br />
-Change directories to the `alanbot/nmt-chatbot/setup` folder. <br />
+Take the `train.from` and `train.to` files in the root directory and paste them into the `alanbot/nmt-chatbot/new_data/` directory, replacing the existing sample data with this project's generated data. <br /> <br />
+Change directories to the `alanbot/nmt-chatbot/setup/` folder. <br />
 `python prepare_data.py` <br />
 `cd ../` <br />
 `python train.py` <br /><br />
+
+When satisfied with the training, run the `inference.py` file in the `alanbot/nmt-chatbot/` directory to interact with alanbot.
 
 # Course Project Deliverables:
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
