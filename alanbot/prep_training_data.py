@@ -30,7 +30,7 @@ while cursor_length == limit:
 
         dataframe = pd.read_sql("SELECT * FROM parent_reply WHERE unix > {} and parent NOT NULL and score > 0 ORDER BY unix ASC LIMIT {}".format(last_unix, limit), connection)
         last_unix = dataframe.tail(1)['unix'].values[0] # setting the last_unix value appropriately
-        cursor_length = len(dataframe) # this should be the length of the limit (10000)
+        cursor_length = len(dataframe) # this should be the length of the limit (5000)
 
         if not test_done:
 
