@@ -6,10 +6,10 @@ Third year AI project for an introductory course at Ontario Tech. This project u
 Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. <br />
 https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0 <br />
 
-Download and install the latest CUDA Toolkit
+Download and install the latest CUDA Toolkit <br />
 https://developer.nvidia.com/cuda-downloads <br />
 
-Windows Anaconda
+Windows Anaconda <br />
 https://www.anaconda.com/products/individual#windows <br />
 
 ### For Ubuntu 18.04
@@ -22,20 +22,20 @@ Install the latest distribution of Anaconda making note of its installation loca
 `conda create -n chatbot python=3.6` <br />
 `conda activate chatbot` OR `activate chatbot` <br />
 `pip install -r requirements.txt` <br />
-`conda deactivate` to deactivate the environment. <br /><br />
+`conda deactivate` to deactivate the environment. <br />
 
 To run the initial chatbot prototype, run this in the root directory: <br />
 `conda activate chatbot` OR `activate chatbot` <br />
-`python main.py` <br /><br />
+`python main.py` <br />
 
 For the build based on Neural Machine Translation (NMT) for the training model, change directory to `alanbot` <br />
 `cd alanbot` <br />
-`git clone --recursive https://github.com/daniel-kukiela/nmt-chatbot` <br /><br />
+`git clone --recursive https://github.com/daniel-kukiela/nmt-chatbot`
 
-This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `/alanbot/raw_data`. While in the `alanbot` directory, use these next commands to prepare and process the data for training. <br />
+This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `/alanbot/raw_data`. While in the `alanbot` directory, use these next commands to prepare and process the data for training: <br /><br />
 `python alanbot_db.py` Builds the database. <br />
-`python prep_training_data.py` <br />
-Take the `train.from` and `train.to` files in the root directory and paste them into the `alanbot/nmt-chatbot/new_data` directory, replacing the existing sample data with this project's generated data. <br />
+`python prep_training_data.py` <br /> <br />
+Take the `train.from` and `train.to` files in the root directory and paste them into the `alanbot/nmt-chatbot/new_data` directory, replacing the existing sample data with this project's generated data. <br /> <br />
 Change directories to the `alanbot/nmt-chatbot/setup` folder. <br />
 `python prepare_data.py` <br />
 `cd ../` <br />
@@ -66,3 +66,5 @@ at a good conference)?
 
 # Resources
 Tech with Tim: https://www.youtube.com/watch?v=wypVcNIH6D4&list=PLzMcBGfZo4-ndH9FoC4YWHGXG5RZekt-Q
+Sentdex: https://pythonprogramming.net/chatbot-deep-learning-python-tensorflow/
+Reddit Dataset Thread: https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/
