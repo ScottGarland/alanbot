@@ -16,7 +16,7 @@ Install the latest distribution of Anaconda making note of its installation loca
 
 `conda create -n chatbot python=3.6` <br />
 `conda activate chatbot` OR `activate chatbot` <br />
-`pip install numpy nltk tensorflow tflearn` <br />
+`pip install -r requirements.txt` <br />
 `python main.py` <br />
 
 Command to deactivate environment: `conda deactivate` <br />

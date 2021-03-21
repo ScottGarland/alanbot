@@ -1,0 +1,10 @@
+tensorflow==1.15
+tensorflow-gpu==1.15
+numpy
+nltk
+tflearn
+tqdm
+colorama
+regex
+python-Levenshtein
+requests
