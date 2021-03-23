@@ -1,6 +1,6 @@
 ChatbotModel*
 checkpoint*
-alanbot/datasets
+alanbot/raw_data
 alanbot/nmt-chatbot
 alanbot/2015-01.db
 alanbot/test.*
