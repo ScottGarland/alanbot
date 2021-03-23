@@ -4,7 +4,7 @@
     {
       "tag":"greetings",
       "patterns": ["Hi","Hello","How are you"],
-      "responses":["Hello","Hi, I'm Alan "],
+      "responses":["Hi, I'm Alan", "Hello"],
       "context_set":""
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "tag":"like",
-      "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?"],
+      "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?","what are your pass times"],
       "responses":["I like to talk with new people and gain new experiences, what about you?","I like to learn new words and play games","My hobbies are playing games and learning new things"],
       "context_set":""
     },
