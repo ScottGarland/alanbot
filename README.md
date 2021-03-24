@@ -36,7 +36,7 @@ Take the `train.from` and `train.to` files in the root directory and paste them 
 Change directories to the `chatbot/setup/` folder. <br />
 `python prepare_data.py` <br /> Prepares the `train.from` and `train.to` files further to me trained using NMT.
 `cd ../` <br />
-`python train.py` <br /><br /> Executes the training.
+`python train.py` Executes the training. <br /><br />
 
 When satisfied with the training, run the `interact.py` file in the root directory to interact with alanbot.
 
