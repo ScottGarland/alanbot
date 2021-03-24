@@ -1,10 +1,16 @@
 ChatbotModel*
 checkpoint*
-alanbot/raw_data
-alanbot/nmt-chatbot
-alanbot/2015-01.db
-alanbot/test.*
-alanbot/train.*
+raw_data
+data
+model
+new_data
+2015-01.db
+test.*
+train.*
+\.idea/
+__pycache__/
+todo\.txt
+_files/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
