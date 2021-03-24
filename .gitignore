@@ -5,8 +5,8 @@ data
 model
 new_data
 2015-01.db
-test.*
-train.*
+test.to
+train.from
 \.idea/
 __pycache__/
 todo\.txt
