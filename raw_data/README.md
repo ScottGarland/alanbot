@@ -1,0 +1,1 @@
+Folder meant to paste the projects raw data to be processed and trained.

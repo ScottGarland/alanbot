@@ -21,7 +21,7 @@ def format_data(data):
     This function is used to format the data for a cleaner output that can be tokenized more easily
     """
     
-    data = data.replace('\n',' newlchar ').replace('\r',' newlchar ').replace('"',"'")
+    data = data.replace('\n',' newlinechar ').replace('\r',' newlinechar ').replace('"',"'")
     return data
 
 def data_filter(data):

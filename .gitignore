@@ -1,8 +1,8 @@
 ChatbotModel*
 checkpoint*
-raw_data
 data
 model
+RC_2015-01*
 2015-01.db
 train.to
 train.from
