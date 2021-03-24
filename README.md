@@ -31,14 +31,14 @@ To run the initial chatbot prototype, run this in the root directory: <br />
 For the build based on Neural Machine Translation (NMT) for the training model in combination with an improved prototype, continue onwards. 
 This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `chatbot/raw_data`. While in the root directory, use these next commands to prepare and process the data for training: <br /><br />
 `python alanbot_db.py` Builds the database .db file. <br />
-`python prep_training_data.py` process the data in the database and outputs .from and .to files. <br /> <br />
+`python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br /> <br />
 Take the `train.from` and `train.to` files in the root directory and paste them into the `chatbot/new_data/` directory, replacing the existing sample data with this project's generated data. <br /> <br />
 Change directories to the `chatbot/setup/` folder. <br />
-`python prepare_data.py` <br />
+`python prepare_data.py` <br /> Prepares the `train.from` and `train.to` files further to me trained using NMT.
 `cd ../` <br />
-`python train.py` <br /><br />
+`python train.py` <br /><br /> Executes the training.
 
-When satisfied with the training, run the `interacte.py` file in the root directory to interact with alanbot.
+When satisfied with the training, run the `interact.py` file in the root directory to interact with alanbot.
 
 # Course Project Deliverables:
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
