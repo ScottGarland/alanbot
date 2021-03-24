@@ -3,8 +3,8 @@
 # line 15 in the parent file.
 
 import sqlite3
-import pandas as pd
 
+import pandas as pd
 
 timeframe = '2015-01'
 connection = sqlite3.connect('{}.db'.format(timeframe))

@@ -1,7 +1,6 @@
-import sqlite3
 import json
+import sqlite3
 from datetime import datetime
-
 
 TRANSACTION_SIZE = 1000
 DATA_LENGTH = 1000

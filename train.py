@@ -1,14 +1,18 @@
-import sys
-import os
 import argparse
-from setup.settings import hparams, preprocessing
 import math
+import os
+import sys
+
+from setup.settings import hparams, preprocessing
+
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/nmt")
-from nmt import nmt
-import tensorflow as tf
-import colorama
 from threading import Thread
+
+import colorama
+import tensorflow as tf
+
+from nmt import nmt
 from setup.custom_summary import custom_summary
 
 colorama.init()

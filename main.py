@@ -1,19 +1,21 @@
 #Importing librarys
 import discord
-from discord.ext import commands
-
 import nltk
+from discord.ext import commands
 from nltk.stem.lancaster import LancasterStemmer
+
 stemmer = LancasterStemmer()
 nltk.download()
+import json
+import pickle
+import random
+import tkinter
+from tkinter import *
+
 import numpy
 import tflearn
 from tensorflow.python.framework import ops
-import random
-import json
-import pickle
-import tkinter
-from tkinter import  *
+
 
 def send():
     msg =EntryBox.get("1.0",'end-1c').strip()

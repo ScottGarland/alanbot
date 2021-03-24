@@ -1,35 +1,45 @@
-import sys
 import os
+import sys
+
 original_cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/nmt")
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/setup")
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/core")
-from nmt import nmt
 import argparse
-from settings import hparams, out_dir, preprocessing, score as score_settings
+
+from settings import hparams, out_dir, preprocessing
+from settings import score as score_settings
+
+from nmt import nmt
+
 sys.path.remove(os.path.dirname(os.path.realpath(__file__)) + "/setup")
 import tensorflow as tf
-from tokenizer import tokenize, detokenize, apply_bpe, apply_bpe_load
-from sentence import replace_in_answers, normalize_new_lines
 from scorer import score_answers
+from sentence import normalize_new_lines, replace_in_answers
+from tokenizer import apply_bpe, apply_bpe_load, detokenize, tokenize
+
 sys.path.remove(os.path.dirname(os.path.realpath(__file__)) + "/core")
-import colorama
 import random
+
+import colorama
 import discord
-from discord.ext import commands
 import nltk
+from discord.ext import commands
 from nltk.stem.lancaster import LancasterStemmer
+
 stemmer = LancasterStemmer()
 nltk.download()
-import numpy
-import tflearn
-from tensorflow.python.framework import ops
 import json
 import pickle
 import tkinter
-from tkinter import  *
+from tkinter import *
+
+import numpy
+import tflearn
+from tensorflow.python.framework import ops
+
 current_stdout = None
 
 # That will not be as easy as training script, as code relies on input and output file in deep levels of code
