@@ -3,10 +3,11 @@ checkpoint*
 raw_data
 data
 model
-new_data
 2015-01.db
-test.to
+train.to
 train.from
+test.to
+test.from
 \.idea/
 __pycache__/
 todo\.txt
