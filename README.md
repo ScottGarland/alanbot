@@ -34,7 +34,7 @@ This project builds off the RC_2015-01.bz2 file which contains one month's worth
 `python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br /> <br />
 Take the `train.from` and `train.to` files in the root directory and paste them into the `chatbot/new_data/` directory, replacing the existing sample data with this project's generated data. <br /> <br />
 Change directories to the `chatbot/setup/` folder. <br />
-`python prepare_data.py` <br /> Prepares the `train.from` and `train.to` files further to me trained using NMT.
+`python prepare_data.py` <br /> Prepares the `train.from` and `train.to` files further to me trained using NMT. <br />
 `cd ../` <br />
 `python train.py` Executes the training. <br /><br />
 
