@@ -9,3 +9,4 @@ colorama
 regex
 python-Levenshtein
 requests
+discord
