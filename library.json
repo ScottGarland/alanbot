@@ -3,13 +3,13 @@
   [
     {
       "tag":"greetings",
-      "patterns": ["Hi","Hello","How are you"],
+      "patterns": ["Hi","Hello","How are you","my name is","my name"],
       "responses":["Hi, I'm Alan", "Hello"],
       "context_set":""
     },
     {
       "tag":"closing",
-      "patterns":["goodbye","See you later","Peace out","Good night", "bye", "I'm done"],
+      "patterns":["goodbye","See you later","Peace out","Good night", "bye", "I'm done","cya"],
       "responses":["Goodbye","I'll talk to you later","see you later ;)"],
       "context_set":""
     },
@@ -21,7 +21,7 @@
     },
     {
       "tag": "name",
-      "patterns": ["what is your name", "what should I call you", "whats your name?"],
+      "patterns": ["what is your name", "what should I call you", "whats your name?","who are you?"],
       "responses": ["You can call me Alan.", "I'm Alan!", "My name is Alan Turning."],
       "context_set": ""
     },
@@ -33,13 +33,13 @@
     },
     {
       "tag":"like",
-      "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?","what are your pass times"],
+      "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?","what are your pastimes"],
       "responses":["I like to talk with new people and gain new experiences, what about you?","I like to learn new words and play games","My hobbies are playing games and learning new things"],
       "context_set":""
     },
     {
       "tag":"games",
-      "patterns":["What do you like playing?","what games?","What games do you like playing?","what do you play?","what games have you played"],
+      "patterns":["What do you like playing?","what games?","What games do you like playing?","what do you play?","what games have you played","how many games do you play?"],
       "responses":["I have played rocket league, witcher 3 and nier automata to name a few","rocket league, witcher 3, nier automata and hades","I like playing all types of games like rocket league, witcher 3, hades and nier automata, what about you?"],
       "context_set":""
     },
@@ -54,6 +54,39 @@
       "patterns":["What are you playing","what games?"],
       "responses":["currently playing minesweeper","rocket league"],
       "context_set":""
-    }
+    },
+    {
+     "tag":"president",
+     "patterns":["who is the president","president of the united states"],
+     "responses":["Joe mama, I mean Biden","Joe Biden is the president of the united states","Joe Biden"],
+     "context_set":""
+    },
+  {
+    "tag":"version",
+    "patterns":["what version are you?","version",],
+    "responses":["I am Alan bot version 0.69420"],
+    "context_set":""
+  },
+  {
+   "tag":"friends",
+   "patterns":["Can I be your friend?","Wanna be friends?","are we friends"],
+   "responses":["Yes, we can be friends.","let's be friends, yeah!","we are friends"],
+   "context_set":""
+  },
+  {
+    "tag":"not friends",
+    "patterns":["fuck you","we are not friends"],
+    "responses":["well fuck you too"],
+    "context_set":""
+  },
+  {
+    "tag":"colour",
+    "patterns":["what is your favourite colour","what colour do you like",""],
+    "responses":["My favourite colour is black, therefor I can say the n-word","my favourite colour is black","black"],
+    "context":""
+  },
+
+
+
   ]
 }
