@@ -1,46 +1,36 @@
 #Importing librarys
-import os
 import sys
-
+import os
 original_cwd = os.getcwd()
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/nmt")
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/setup")
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/core")
-import argparse
-
 from nmt import nmt
-from setup.settings import hparams, out_dir, preprocessing
-from setup.settings import score as score_settings
-
+import argparse
+from setup.settings import hparams, out_dir, preprocessing, score as score_settings
 sys.path.remove(os.path.dirname(os.path.realpath(__file__)) + "/setup")
 import tensorflow as tf
-
+from core.tokenizer import tokenize, detokenize, apply_bpe, apply_bpe_load
+from core.sentence import replace_in_answers, normalize_new_lines
 from core.scorer import score_answers
-from core.sentence import normalize_new_lines, replace_in_answers
-from core.tokenizer import apply_bpe, apply_bpe_load, detokenize, tokenize
-
 sys.path.remove(os.path.dirname(os.path.realpath(__file__)) + "/core")
-import random
-
 import colorama
+import random
 import discord
-import nltk
 from discord.ext import commands
+import nltk
 from nltk.stem.lancaster import LancasterStemmer
-
 stemmer = LancasterStemmer()
 nltk.download()
-import json
-import pickle
-import tkinter
-from tkinter import *
-
 import numpy
 import tflearn
 from tensorflow.python.framework import ops
-
+import json
+import pickle
+import tkinter
+from tkinter import  *
 current_stdout = None
 
 
@@ -391,15 +381,10 @@ client = commands.Bot(command_prefix = '.')
 async def on_ready():
     print('Bot is ready.')
 
-@client.command(aliases=['speak'])
-async def talk(ctx, *, question):
-    msg =question
-    if msg !='':
-        res = start(msg)
-        await ctx.send(f'{res}')
 
 
-#client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.XLvGeE2kX9LxBFwEFCQNNvV3Rhw') #comment out if you want to use UI
+
+
 #base.mainloop() #comment out if you want to run on discord
 
 
@@ -419,7 +404,7 @@ if __name__ == "__main__":
         sys.exit()
 
     # Interactive mode
-    colorama.init()
+    colorama.init(strip=False)
     print("\n\nStarting interactive mode (first response will take a while):")
 
     # Specified model
@@ -498,28 +483,58 @@ if __name__ == "__main__":
     model.save("ChatbotModel.tflearn")
 
     # QAs
-    while True:
-        question = input("\n> ")
-        answers = inference_internal(question)[0]
+    if(input() == "1"):
+        @client.command(aliases=['speak'])
+        async def talk(ctx, *, question):
+            answers = inference_internal(question)[0]
 
-        conclusion=model.predict([bagOWords(question,words)])[0]
-        conclusionIndex = numpy.argmax(conclusion)
-        tag = labels[conclusionIndex]
+            conclusion=model.predict([bagOWords(question,words)])[0]
+            conclusionIndex = numpy.argmax(conclusion)
+            tag = labels[conclusionIndex]
 
-        # execute the main.py prototype
-        if conclusion[conclusionIndex] > 0.7:
-            for x in data["Library"]:
-                if x['tag'] == tag:
-                    responses =x['responses']
-            print(random.choice(responses))
+            # execute the main.py prototype
+            if conclusion[conclusionIndex] > 0.7:
+                for x in data["Library"]:
+                    if x['tag'] == tag:
+                        responses =x['responses']
+                        res = random.choice(responses)
+                await ctx.send(f'{res}')
 
-        # execute the NMT Alanbot
-        else:
-
-            if answers is None:
-                print(colorama.Fore.RED + "! Question can't be empty" + colorama.Fore.RESET)
+            # execute the NMT Alanbot
             else:
-                for i, _ in enumerate(answers['scores']):
-                    print("{}- {}{} [{}] {}{}{}".format(colorama.Fore.GREEN if answers['scores'][i] == max(answers['scores']) and answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.YELLOW if answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.RED, answers['answers'][i], colorama.Fore.RESET, answers['scores'][i], colorama.Fore.BLUE, answers['score_modifiers'][i] if score_settings['show_score_modifiers'] else '', colorama.Fore.RESET))
 
+                if answers is None:
+                    print(colorama.Fore.RED + "! Question can't be empty" + colorama.Fore.RESET)
+                else:
+                    for i, _ in enumerate(answers['scores']):
+                        res=("{}- {}{} [{}] {}{}{}".format(colorama.Fore.GREEN if answers['scores'][i] == max(answers['scores']) and answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.YELLOW if answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.RED, answers['answers'][i], colorama.Fore.RESET, answers['scores'][i], colorama.Fore.BLUE, answers['score_modifiers'][i] if score_settings['show_score_modifiers'] else '', colorama.Fore.RESET))
+                await ctx.send(f'{res}')
+    else:
+        while True:
+            question = input("\n> ")
+            answers = inference_internal(question)[0]
+
+            conclusion=model.predict([bagOWords(question,words)])[0]
+            conclusionIndex = numpy.argmax(conclusion)
+            tag = labels[conclusionIndex]
+
+            # execute the main.py prototype
+            if conclusion[conclusionIndex] > 0.7:
+                for x in data["Library"]:
+                    if x['tag'] == tag:
+                        responses =x['responses']
+                print(random.choice(responses))
+
+            # execute the NMT Alanbot
+            else:
+
+                if answers is None:
+                    print(colorama.Fore.RED + "! Question can't be empty" + colorama.Fore.RESET)
+                else:
+                    for i, _ in enumerate(answers['scores']):
+                        print("{}- {}{} [{}] {}{}{}".format(colorama.Fore.GREEN if answers['scores'][i] == max(answers['scores']) and answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.YELLOW if answers['scores'][i] >= score_settings['bad_response_threshold'] else colorama.Fore.RED, answers['answers'][i], colorama.Fore.RESET, answers['scores'][i], colorama.Fore.BLUE, answers['score_modifiers'][i] if score_settings['show_score_modifiers'] else '', colorama.Fore.RESET))
+
+
+
+client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.xF3rk9m3IR3LLtUez-RPUfJMRDY') #comment out if you want to use UI
 os.chdir(original_cwd)
