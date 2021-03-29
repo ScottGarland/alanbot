@@ -2,6 +2,7 @@ ChatbotModel*
 checkpoint*
 data
 model
+model_old
 RC_2015-01*
 2015-01.db
 train.to
