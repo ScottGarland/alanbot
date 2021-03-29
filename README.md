@@ -24,11 +24,7 @@ Install the latest distribution of Anaconda making note of its installation loca
 `pip install -r requirements.txt` <br />
 `conda deactivate` to deactivate the environment. <br />
 
-To run the initial chatbot prototype, run this in the root directory: <br />
-`conda activate chatbot` OR `activate chatbot` <br />
-`python prototype.py` <br />
-
-For the build based on Neural Machine Translation (NMT) for the training model in combination with an improved prototype, continue onwards. This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to chatbot/raw_data. While in the root directory, use these next commands to prepare and process the data for training: <br />
+This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to chatbot/raw_data. While in the root directory, use these next commands to prepare and process the data for training: <br />
 
 `python alanbot_db.py` Builds the database .db file. <br />
 `python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br />
