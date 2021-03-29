@@ -13,6 +13,7 @@ test.from
 __pycache__/
 todo\.txt
 _files/
+pickle.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
