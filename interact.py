@@ -1,31 +1,36 @@
-import sys
 import os
+import sys
+
 from tensorflow.python.framework import ops
+
 sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 sys.path.append(os.path.realpath(os.path.dirname(__file__)) + "/nmt")
 import argparse
-from setup.settings import hparams, out_dir
-from nmt import nmt
-import tensorflow as tf
-from core.tokenizer import tokenize, detokenize
-from core.sentence import score_answers, replace_in_answers
+import random
+
 import colorama
-import scoring
-import random
-import tflearn
-import random
 import discord
-from discord.ext import commands
 import nltk
+import tensorflow as tf
+import tflearn
+from discord.ext import commands
 from nltk.stem.lancaster import LancasterStemmer
+
+import scoring
+from core.sentence import replace_in_answers, score_answers
+from core.tokenizer import detokenize, tokenize
+from nmt import nmt
+from setup.settings import hparams, out_dir
+
 stemmer = LancasterStemmer()
 nltk.download()
-import numpy
 # from tensorflow.python.framework import ops
 import json
 import pickle
 import tkinter
-from tkinter import  *
+from tkinter import *
+
+import numpy
 
 current_stdout = None
 
