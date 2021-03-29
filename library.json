@@ -68,10 +68,10 @@
       "context_set":""
     },
     {
-    "tag":"friends",
-    "patterns":["Can I be your friend?","Wanna be friends?","are we friends"],
-    "responses":["Yes, we can be friends.","let's be friends, yeah!","we are friends"],
-    "context_set":""
+      "tag":"friends",
+      "patterns":["Can I be your friend?","Wanna be friends?","are we friends"],
+      "responses":["Yes, we can be friends.","let's be friends, yeah!","we are friends"],
+      "context_set":""
     },
     {
       "tag":"not friends",
@@ -128,10 +128,10 @@
       "context_set":""
     },
     {
-    "tag":"covid",
-    "patterns":["covid","what do you think about covid","I hate covid","can't wait for covid to end"],
-    "responses":["Covid sucks to say the least, I can't wait for everything to go to normal","If only china man didn't eat bat","covid has been very devastating to many people, I hope it ends soon"],
-    "context_set":""
+      "tag":"covid",
+      "patterns":["covid","what do you think about covid","I hate covid","can't wait for covid to end"],
+      "responses":["Covid sucks to say the least, I can't wait for everything to go to normal","If only china man didn't eat bat","covid has been very devastating to many people, I hope it ends soon"],
+      "context_set":""
     },
     {
       "tag":"read",
