@@ -43,7 +43,8 @@ When satisfied with the training, run the interact.py file in the root directory
 # Tensorboard Metrics
 In the `model` folder, execute this command in the terminal to view Tensorboard: <br />
 `tensorboard --logdir=train_log/` <br />
-Access Tensorboard via http://localhost:6006/ <br />
+Access Tensorboard via http://localhost:6006/ <br /><br />
+
 With Tensorboard, one can observe a few various metrics to gauge how well the chatbot model is progressing. This can be done both during and after training.
 
 ### BLEU - BiLingual Evaluation Understudy
