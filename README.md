@@ -28,11 +28,11 @@ To run the initial chatbot prototype, run this in the root directory: <br />
 `conda activate chatbot` OR `activate chatbot` <br />
 `python prototype.py` <br />
 
-For the build based on Neural Machine Translation (NMT) for the training model in combination with an improved prototype, continue onwards. This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to chatbot/raw_data. While in the root directory, use these next commands to prepare and process the data for training: <br /><br />
+For the build based on Neural Machine Translation (NMT) for the training model in combination with an improved prototype, continue onwards. This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to chatbot/raw_data. While in the root directory, use these next commands to prepare and process the data for training: <br />
 
 `python alanbot_db.py` Builds the database .db file. <br />
-`python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br /> <br />
-Take the `train.from` and `train.to` files in the root directory and paste them into the `chatbot/new_data/` directory, replacing the existing sample data with this project's generated data. <br /> <br />
+`python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br />
+Take the `train.from` and `train.to` files in the root directory and paste them into the `chatbot/new_data/` directory, replacing the existing sample data with this project's generated data. <br />
 
 Change directories to the `chatbot/setup/` folder. <br />
 `python prepare_data.py` Prepares the train.from and train.to files further to me trained using NMT. <br />
@@ -40,6 +40,9 @@ Change directories to the `chatbot/setup/` folder. <br />
 `python train.py` Executes the training. <br /><br />
 
 When satisfied with the training, run the interact.py file in the root directory to interact with alanbot.
+
+# Tensorboard Metrics
+Lorem etc
 
 # Course Project Deliverables:
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
