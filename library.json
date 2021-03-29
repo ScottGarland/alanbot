@@ -93,7 +93,7 @@
     },
     {
       "tag":"smart",
-      "patterns":["how smart are you","are you smart",""],
+      "patterns":["how smart are you","are you smart"],
       "responses":["I am big dumb","I have an IQ equal to trump's","I'm not very smart"],
       "context_set":""
     },
