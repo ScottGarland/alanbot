@@ -22,7 +22,7 @@
     {
       "tag": "name",
       "patterns": ["what is your name", "what should I call you", "whats your name?","who are you?"],
-      "responses": ["You can call me Alan.", "I'm Alan!", "My name is Alan Turning."],
+      "responses": ["You can call me Alan.", "I'm Alan!", "My name is Alan Turing."],
       "context_set": ""
     },
     {
