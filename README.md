@@ -41,7 +41,7 @@ Change directories to the `chatbot/setup/` folder. <br />
 When satisfied with the training, run the interact.py file in the root directory to interact with alanbot.
 
 # Tensorboard Metrics
-In the `model` folder, execute this command in the terminal to view Tensorboard.
+In the `model` folder, execute this command in the terminal to view Tensorboard: <br />
 `tensorboard --logdir=train_log/` <br />
 Access Tensorboard via http://localhost:6006/ <br />
 With Tensorboard, one can observe a few various metrics to gauge how well the chatbot model is progressing. This can be done both during and after training.
