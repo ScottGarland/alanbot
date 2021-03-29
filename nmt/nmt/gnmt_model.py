@@ -20,10 +20,12 @@ from __future__ import print_function
 
 import tensorflow as tf
 
+# TODO(rzhao): Use tf.contrib.framework.nest once 1.3 is out.
+from tensorflow.python.util import nest
+
 from . import attention_model
 from . import model_helper
 from .utils import misc_utils as utils
-from .utils import vocab_utils
 
 __all__ = ["GNMTModel"]
 
@@ -41,9 +43,6 @@ class GNMTModel(attention_model.AttentionModel):
                reverse_target_vocab_table=None,
                scope=None,
                extra_args=None):
-    self.is_gnmt_attention = (
-        hparams.attention_architecture in ["gnmt", "gnmt_v2"])
-
     super(GNMTModel, self).__init__(
         hparams=hparams,
         mode=mode,
@@ -63,9 +62,10 @@ class GNMTModel(attention_model.AttentionModel):
       raise ValueError("Unknown encoder_type %s" % hparams.encoder_type)
 
     # Build GNMT encoder.
+    num_layers = hparams.num_layers
+    num_residual_layers = hparams.num_residual_layers
     num_bi_layers = 1
-    num_uni_layers = self.num_encoder_layers - num_bi_layers
-    utils.print_out("# Build a GNMT encoder")
+    num_uni_layers = num_layers - num_bi_layers
     utils.print_out("  num_bi_layers = %d" % num_bi_layers)
     utils.print_out("  num_uni_layers = %d" % num_uni_layers)
 
@@ -77,12 +77,14 @@ class GNMTModel(attention_model.AttentionModel):
     with tf.variable_scope("encoder") as scope:
       dtype = scope.dtype
 
-      self.encoder_emb_inp = self.encoder_emb_lookup_fn(
-          self.embedding_encoder, source)
+      # Look up embedding, emp_inp: [max_time, batch_size, num_units]
+      #   when time_major = True
+      encoder_emb_inp = tf.nn.embedding_lookup(self.embedding_encoder,
+                                               source)
 
       # Execute _build_bidirectional_rnn from Model class
       bi_encoder_outputs, bi_encoder_state = self._build_bidirectional_rnn(
-          inputs=self.encoder_emb_inp,
+          inputs=encoder_emb_inp,
           sequence_length=iterator.source_sequence_length,
           dtype=dtype,
           hparams=hparams,
@@ -90,96 +92,43 @@ class GNMTModel(attention_model.AttentionModel):
           num_bi_residual_layers=0,  # no residual connection
       )
 
-      # Build unidirectional layers
-      if self.extract_encoder_layers:
-        encoder_state, encoder_outputs = self._build_individual_encoder_layers(
-            bi_encoder_outputs, num_uni_layers, dtype, hparams)
-      else:
-        encoder_state, encoder_outputs = self._build_all_encoder_layers(
-            bi_encoder_outputs, num_uni_layers, dtype, hparams)
+      uni_cell = model_helper.create_rnn_cell(
+          unit_type=hparams.unit_type,
+          num_units=hparams.num_units,
+          num_layers=num_uni_layers,
+          num_residual_layers=num_residual_layers,
+          forget_bias=hparams.forget_bias,
+          dropout=hparams.dropout,
+          num_gpus=hparams.num_gpus,
+          base_gpu=1,
+          mode=self.mode,
+          single_cell_fn=self.single_cell_fn)
 
-      # Pass all encoder states to the decoder
-      #   except the first bi-directional layer
+      # encoder_outputs: size [max_time, batch_size, num_units]
+      #   when time_major = True
+      encoder_outputs, encoder_state = tf.nn.dynamic_rnn(
+          uni_cell,
+          bi_encoder_outputs,
+          dtype=dtype,
+          sequence_length=iterator.source_sequence_length,
+          time_major=self.time_major)
+
+      # Pass all encoder state except the first bi-directional layer's state to
+      # decoder.
       encoder_state = (bi_encoder_state[1],) + (
           (encoder_state,) if num_uni_layers == 1 else encoder_state)
 
     return encoder_outputs, encoder_state
 
-  def _build_all_encoder_layers(self, bi_encoder_outputs,
-                                num_uni_layers, dtype, hparams):
-    """Build encoder layers all at once."""
-    uni_cell = model_helper.create_rnn_cell(
-        unit_type=hparams.unit_type,
-        num_units=hparams.num_units,
-        num_layers=num_uni_layers,
-        num_residual_layers=self.num_encoder_residual_layers,
-        forget_bias=hparams.forget_bias,
-        dropout=hparams.dropout,
-        num_gpus=self.num_gpus,
-        base_gpu=1,
-        mode=self.mode,
-        single_cell_fn=self.single_cell_fn)
-    encoder_outputs, encoder_state = tf.nn.dynamic_rnn(
-        uni_cell,
-        bi_encoder_outputs,
-        dtype=dtype,
-        sequence_length=self.iterator.source_sequence_length,
-        time_major=self.time_major)
-
-    # Use the top layer for now
-    self.encoder_state_list = [encoder_outputs]
-
-    return encoder_state, encoder_outputs
-
-  def _build_individual_encoder_layers(self, bi_encoder_outputs,
-                                       num_uni_layers, dtype, hparams):
-    """Run each of the encoder layer separately, not used in general seq2seq."""
-    uni_cell_lists = model_helper._cell_list(
-        unit_type=hparams.unit_type,
-        num_units=hparams.num_units,
-        num_layers=num_uni_layers,
-        num_residual_layers=self.num_encoder_residual_layers,
-        forget_bias=hparams.forget_bias,
-        dropout=hparams.dropout,
-        num_gpus=self.num_gpus,
-        base_gpu=1,
-        mode=self.mode,
-        single_cell_fn=self.single_cell_fn)
-
-    encoder_inp = bi_encoder_outputs
-    encoder_states = []
-    self.encoder_state_list = [bi_encoder_outputs[:, :, :hparams.num_units],
-                               bi_encoder_outputs[:, :, hparams.num_units:]]
-    with tf.variable_scope("rnn/multi_rnn_cell"):
-      for i, cell in enumerate(uni_cell_lists):
-        with tf.variable_scope("cell_%d" % i) as scope:
-          encoder_inp, encoder_state = tf.nn.dynamic_rnn(
-              cell,
-              encoder_inp,
-              dtype=dtype,
-              sequence_length=self.iterator.source_sequence_length,
-              time_major=self.time_major,
-              scope=scope)
-          encoder_states.append(encoder_state)
-          self.encoder_state_list.append(encoder_inp)
-
-    encoder_state = tuple(encoder_states)
-    encoder_outputs = self.encoder_state_list[-1]
-    return encoder_state, encoder_outputs
-
   def _build_decoder_cell(self, hparams, encoder_outputs, encoder_state,
                           source_sequence_length):
     """Build a RNN cell with GNMT attention architecture."""
-    # Standard attention
-    if not self.is_gnmt_attention:
-      return super(GNMTModel, self)._build_decoder_cell(
-          hparams, encoder_outputs, encoder_state, source_sequence_length)
-
-    # GNMT attention
     attention_option = hparams.attention
     attention_architecture = hparams.attention_architecture
     num_units = hparams.num_units
-    infer_mode = hparams.infer_mode
+    num_layers = hparams.num_layers
+    num_residual_layers = hparams.num_residual_layers
+    beam_width = hparams.beam_width
 
     dtype = tf.float32
 
@@ -188,12 +137,14 @@ class GNMTModel(attention_model.AttentionModel):
     else:
       memory = encoder_outputs
 
-    if (self.mode == tf.contrib.learn.ModeKeys.INFER and
-        infer_mode == "beam_search"):
-      memory, source_sequence_length, encoder_state, batch_size = (
-          self._prepare_beam_search_decoder_inputs(
-              hparams.beam_width, memory, source_sequence_length,
-              encoder_state))
+    if self.mode == tf.contrib.learn.ModeKeys.INFER and beam_width > 0:
+      memory = tf.contrib.seq2seq.tile_batch(
+          memory, multiplier=beam_width)
+      source_sequence_length = tf.contrib.seq2seq.tile_batch(
+          source_sequence_length, multiplier=beam_width)
+      encoder_state = tf.contrib.seq2seq.tile_batch(
+          encoder_state, multiplier=beam_width)
+      batch_size = self.batch_size * beam_width
     else:
       batch_size = self.batch_size
 
@@ -203,11 +154,11 @@ class GNMTModel(attention_model.AttentionModel):
     cell_list = model_helper._cell_list(  # pylint: disable=protected-access
         unit_type=hparams.unit_type,
         num_units=num_units,
-        num_layers=self.num_decoder_layers,
-        num_residual_layers=self.num_decoder_residual_layers,
+        num_layers=num_layers,
+        num_residual_layers=num_residual_layers,
         forget_bias=hparams.forget_bias,
         dropout=hparams.dropout,
-        num_gpus=self.num_gpus,
+        num_gpus=hparams.num_gpus,
         mode=self.mode,
         single_cell_fn=self.single_cell_fn,
         residual_fn=gnmt_residual_fn
@@ -218,7 +169,7 @@ class GNMTModel(attention_model.AttentionModel):
 
     # Only generate alignment in greedy INFER mode.
     alignment_history = (self.mode == tf.contrib.learn.ModeKeys.INFER and
-                         infer_mode != "beam_search")
+                         beam_width == 0)
     attention_cell = tf.contrib.seq2seq.AttentionWrapper(
         attention_cell,
         attention_mechanism,
@@ -237,6 +188,7 @@ class GNMTModel(attention_model.AttentionModel):
       raise ValueError(
           "Unknown attention_architecture %s" % attention_architecture)
 
+
     if hparams.pass_hidden_state:
       decoder_initial_state = tuple(
           zs.clone(cell_state=es)
@@ -249,13 +201,10 @@ class GNMTModel(attention_model.AttentionModel):
     return cell, decoder_initial_state
 
   def _get_infer_summary(self, hparams):
-    if hparams.infer_mode == "beam_search":
+    if hparams.beam_width > 0:
       return tf.no_op()
-    elif self.is_gnmt_attention:
-      return attention_model._create_attention_images_summary(
-          self.final_context_state[0])
-    else:
-      return super(GNMTModel, self)._get_infer_summary(hparams)
+    return attention_model._create_attention_images_summary(
+        self.final_context_state[0])
 
 
 class GNMTAttentionMultiCell(tf.nn.rnn_cell.MultiRNNCell):
@@ -276,7 +225,7 @@ class GNMTAttentionMultiCell(tf.nn.rnn_cell.MultiRNNCell):
 
   def __call__(self, inputs, state, scope=None):
     """Run the cell with bottom layer's attention copied to all upper layers."""
-    if not tf.contrib.framework.nest.is_sequence(state):
+    if not nest.is_sequence(state):
       raise ValueError(
           "Expected state to be a tuple of length %d, but received: %s"
           % (len(self.state_size), state))
@@ -322,12 +271,9 @@ def gnmt_residual_fn(inputs, outputs):
     out_dim = out.get_shape().as_list()[-1]
     inp_dim = inp.get_shape().as_list()[-1]
     return tf.split(inp, [out_dim, inp_dim - out_dim], axis=-1)
-  actual_inputs, _ = tf.contrib.framework.nest.map_structure(
-      split_input, inputs, outputs)
+  actual_inputs, _ = nest.map_structure(split_input, inputs, outputs)
   def assert_shape_match(inp, out):
     inp.get_shape().assert_is_compatible_with(out.get_shape())
-  tf.contrib.framework.nest.assert_same_structure(actual_inputs, outputs)
-  tf.contrib.framework.nest.map_structure(
-      assert_shape_match, actual_inputs, outputs)
-  return tf.contrib.framework.nest.map_structure(
-      lambda inp, out: inp + out, actual_inputs, outputs)
+  nest.assert_same_structure(actual_inputs, outputs)
+  nest.map_structure(assert_shape_match, actual_inputs, outputs)
+  return nest.map_structure(lambda inp, out: inp + out, actual_inputs, outputs)

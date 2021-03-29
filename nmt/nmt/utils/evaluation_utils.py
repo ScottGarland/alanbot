@@ -133,8 +133,8 @@ def _accuracy(label_file, pred_file):
 def _word_accuracy(label_file, pred_file):
   """Compute accuracy on per word basis."""
 
-  with codecs.getreader("utf-8")(tf.gfile.GFile(label_file, "rb")) as label_fh:
-    with codecs.getreader("utf-8")(tf.gfile.GFile(pred_file, "rb")) as pred_fh:
+  with codecs.getreader("utf-8")(tf.gfile.GFile(label_file, "r")) as label_fh:
+    with codecs.getreader("utf-8")(tf.gfile.GFile(pred_file, "r")) as pred_fh:
       total_acc, total_count = 0., 0.
       for sentence in label_fh:
         labels = sentence.strip().split(" ")
@@ -165,7 +165,7 @@ def _moses_bleu(multi_bleu_script, tgt_test, trans_file, subword_option=None):
     tgt_test = debpe_tgt_test
   elif subword_option == "spm":
     despm_tgt_test = tgt_test + ".despm"
-    if not os.path.exists(despm_tgt_test):
+    if not os.path.exists(debpe_tgt_test):
       subprocess.call("cp %s %s" % (tgt_test, despm_tgt_test))
       subprocess.call("sed s/ //g %s" % (despm_tgt_test))
       subprocess.call(u"sed s/^\u2581/g %s" % (despm_tgt_test))

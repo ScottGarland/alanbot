@@ -37,12 +37,11 @@ def decode_and_evaluate(name,
                         beam_width,
                         tgt_eos,
                         num_translations_per_input=1,
-                        decode=True,
-                        infer_mode="greedy"):
+                        decode=True):
   """Decode a test set and compute a score according to the evaluation task."""
   # Decode
   if decode:
-    utils.print_out("  decoding to output %s" % trans_file)
+    utils.print_out("  decoding to output %s." % trans_file)
 
     start_time = time.time()
     num_sentences = 0
@@ -50,15 +49,12 @@ def decode_and_evaluate(name,
         tf.gfile.GFile(trans_file, mode="wb")) as trans_f:
       trans_f.write("")  # Write empty string to ensure file is created.
 
-      if infer_mode == "greedy":
-        num_translations_per_input = 1
-      elif infer_mode == "beam_search":
-        num_translations_per_input = min(num_translations_per_input, beam_width)
-
+      num_translations_per_input = max(
+          min(num_translations_per_input, beam_width), 1)
       while True:
         try:
           nmt_outputs, _ = model.decode(sess)
-          if infer_mode != "beam_search":
+          if beam_width == 0:
             nmt_outputs = np.expand_dims(nmt_outputs, 0)
 
           batch_size = nmt_outputs.shape[1]
@@ -103,4 +99,11 @@ def get_translation(nmt_outputs, sent_id, tgt_eos, subword_option):
   if tgt_eos and tgt_eos in output:
     output = output[:output.index(tgt_eos)]
 
-  return utils.format_sentence(output, subword_option)
+  if subword_option == "bpe":  # BPE
+    translation = utils.format_bpe_text(output)
+  elif subword_option == "spm":  # SPM
+    translation = utils.format_spm_text(output)
+  else:
+    translation = utils.format_text(output)
+
+  return translation

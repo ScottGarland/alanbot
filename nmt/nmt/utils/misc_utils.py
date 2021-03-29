@@ -23,22 +23,14 @@ import math
 import os
 import sys
 import time
-from distutils import version
 
 import numpy as np
-import six
 import tensorflow as tf
 
 
-def parse_version(version):
-  return tuple(map(int, version.split(".")))
-
 def check_tensorflow_version():
-  # LINT.IfChange
-  min_tf_version = "1.12.0"
-  # LINT.ThenChange(<pwd>/nmt/copy.bara.sky)
-  if (version.LooseVersion(tf.__version__) <
-      version.LooseVersion(min_tf_version)):
+  min_tf_version = "1.15.0"
+  if tf.__version__ < min_tf_version:
     raise EnvironmentError("Tensorflow version must >= %s" % min_tf_version)
 
 
@@ -69,10 +61,10 @@ def print_out(s, f=None, new_line=True):
       f.write(b"\n")
 
   # stdout
-  if six.PY2:
-    sys.stdout.write(s.encode("utf-8"))
-  else:
-    sys.stdout.buffer.write(s.encode("utf-8"))
+  out_s = s.encode(sys.stdout.encoding, "backslashreplace")
+  if not isinstance(out_s, str):
+    out_s = out_s.decode(sys.stdout.encoding, "backslashreplace")
+  print(out_s, end="", file=sys.stdout)
 
   if new_line:
     sys.stdout.write("\n")
@@ -108,10 +100,14 @@ def load_hparams(model_dir):
 
 def maybe_parse_standard_hparams(hparams, hparams_path):
   """Override hparams values with existing standard hparams config."""
-  if hparams_path and tf.gfile.Exists(hparams_path):
+  if not hparams_path:
+    return hparams
+
+  if tf.gfile.Exists(hparams_path):
     print_out("# Loading standard hparams from %s" % hparams_path)
-    with codecs.getreader("utf-8")(tf.gfile.GFile(hparams_path, "rb")) as f:
+    with tf.gfile.GFile(hparams_path, "r") as f:
       hparams.parse_json(f.read())
+
   return hparams
 
 
@@ -120,7 +116,7 @@ def save_hparams(out_dir, hparams):
   hparams_file = os.path.join(out_dir, "hparams")
   print_out("  saving hparams to %s" % hparams_file)
   with codecs.getwriter("utf-8")(tf.gfile.GFile(hparams_file, "wb")) as f:
-    f.write(hparams.to_json(indent=4, sort_keys=True))
+    f.write(hparams.to_json())
 
 
 def debug_tensor(s, msg=None, summarize=10):
@@ -138,21 +134,13 @@ def add_summary(summary_writer, global_step, tag, value):
   summary_writer.add_summary(summary, global_step)
 
 
-def get_config_proto(log_device_placement=False, allow_soft_placement=True,
-                     num_intra_threads=0, num_inter_threads=0):
+def get_config_proto(log_device_placement=False, allow_soft_placement=True):
   # GPU options:
   # https://www.tensorflow.org/versions/r0.10/how_tos/using_gpu/index.html
   config_proto = tf.ConfigProto(
       log_device_placement=log_device_placement,
       allow_soft_placement=allow_soft_placement)
   config_proto.gpu_options.allow_growth = True
-
-  # CPU threads options
-  if num_intra_threads:
-    config_proto.intra_op_parallelism_threads = num_intra_threads
-  if num_inter_threads:
-    config_proto.inter_op_parallelism_threads = num_inter_threads
-
   return config_proto
 
 
@@ -168,6 +156,8 @@ def format_bpe_text(symbols, delimiter=b"@@"):
   """Convert a sequence of bpe words into sentence."""
   words = []
   word = b""
+  if isinstance(symbols, str):
+    symbols = symbols.encode()
   delimiter_len = len(delimiter)
   for symbol in symbols:
     if len(symbol) >= delimiter_len and symbol[-delimiter_len:] == delimiter:
@@ -183,17 +173,3 @@ def format_spm_text(symbols):
   """Decode a text in SPM (https://github.com/google/sentencepiece) format."""
   return u"".join(format_text(symbols).decode("utf-8").split()).replace(
       u"\u2581", u" ").strip().encode("utf-8")
-
-def format_sentence(sentence, subword_option):
-  """Decode sentence using subword option"""
-  if isinstance(sentence, str):
-    sentence = sentence.encode("utf-8").split(b' ')
-
-  if subword_option == "bpe":  # BPE
-    sentence = format_bpe_text(sentence)
-  elif subword_option == "spm":  # SPM
-    sentence = format_spm_text(sentence)
-  else:
-    sentence = format_text(sentence)
-
-  return sentence

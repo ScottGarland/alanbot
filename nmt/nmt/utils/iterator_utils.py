@@ -19,9 +19,6 @@ import collections
 
 import tensorflow as tf
 
-from ..utils import vocab_utils
-
-
 __all__ = ["BatchedInput", "get_iterator", "get_infer_iterator"]
 
 
@@ -37,35 +34,21 @@ class BatchedInput(
 def get_infer_iterator(src_dataset,
                        src_vocab_table,
                        batch_size,
+                       source_reverse,
                        eos,
-                       src_max_len=None,
-                       use_char_encode=False):
-  if use_char_encode:
-    src_eos_id = vocab_utils.EOS_CHAR_ID
-  else:
-    src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)
+                       src_max_len=None):
+  src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)
   src_dataset = src_dataset.map(lambda src: tf.string_split([src]).values)
 
   if src_max_len:
     src_dataset = src_dataset.map(lambda src: src[:src_max_len])
-
-  if use_char_encode:
-    # Convert the word strings to character ids
-    src_dataset = src_dataset.map(
-        lambda src: tf.reshape(vocab_utils.tokens_to_bytes(src), [-1]))
-  else:
-    # Convert the word strings to ids
-    src_dataset = src_dataset.map(
-        lambda src: tf.cast(src_vocab_table.lookup(src), tf.int32))
-
+  # Convert the word strings to ids
+  src_dataset = src_dataset.map(
+      lambda src: tf.cast(src_vocab_table.lookup(src), tf.int32))
+  if source_reverse:
+    src_dataset = src_dataset.map(lambda src: tf.reverse(src, axis=[0]))
   # Add in the word counts.
-  if use_char_encode:
-    src_dataset = src_dataset.map(
-        lambda src: (src,
-                     tf.to_int32(
-                         tf.size(src) / vocab_utils.DEFAULT_CHAR_MAXLEN)))
-  else:
-    src_dataset = src_dataset.map(lambda src: (src, tf.size(src)))
+  src_dataset = src_dataset.map(lambda src: (src, tf.size(src)))
 
   def batching_func(x):
     return x.padded_batch(
@@ -102,6 +85,7 @@ def get_iterator(src_dataset,
                  batch_size,
                  sos,
                  eos,
+                 source_reverse,
                  random_seed,
                  num_buckets,
                  src_max_len=None,
@@ -110,17 +94,10 @@ def get_iterator(src_dataset,
                  output_buffer_size=None,
                  skip_count=None,
                  num_shards=1,
-                 shard_index=0,
-                 reshuffle_each_iteration=True,
-                 use_char_encode=False):
+                 shard_index=0):
   if not output_buffer_size:
     output_buffer_size = batch_size * 1000
-
-  if use_char_encode:
-    src_eos_id = vocab_utils.EOS_CHAR_ID
-  else:
-    src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)
-
+  src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(eos)), tf.int32)
   tgt_sos_id = tf.cast(tgt_vocab_table.lookup(tf.constant(sos)), tf.int32)
   tgt_eos_id = tf.cast(tgt_vocab_table.lookup(tf.constant(eos)), tf.int32)
 
@@ -130,8 +107,7 @@ def get_iterator(src_dataset,
   if skip_count is not None:
     src_tgt_dataset = src_tgt_dataset.skip(skip_count)
 
-  src_tgt_dataset = src_tgt_dataset.shuffle(
-      output_buffer_size, random_seed, reshuffle_each_iteration)
+  src_tgt_dataset = src_tgt_dataset.shuffle(output_buffer_size, random_seed)
 
   src_tgt_dataset = src_tgt_dataset.map(
       lambda src, tgt: (
@@ -150,21 +126,16 @@ def get_iterator(src_dataset,
     src_tgt_dataset = src_tgt_dataset.map(
         lambda src, tgt: (src, tgt[:tgt_max_len]),
         num_parallel_calls=num_parallel_calls).prefetch(output_buffer_size)
-
+  if source_reverse:
+    src_tgt_dataset = src_tgt_dataset.map(
+        lambda src, tgt: (tf.reverse(src, axis=[0]), tgt),
+        num_parallel_calls=num_parallel_calls).prefetch(output_buffer_size)
   # Convert the word strings to ids.  Word strings that are not in the
   # vocab get the lookup table's default_value integer.
-  if use_char_encode:
-    src_tgt_dataset = src_tgt_dataset.map(
-        lambda src, tgt: (tf.reshape(vocab_utils.tokens_to_bytes(src), [-1]),
-                          tf.cast(tgt_vocab_table.lookup(tgt), tf.int32)),
-        num_parallel_calls=num_parallel_calls)
-  else:
-    src_tgt_dataset = src_tgt_dataset.map(
-        lambda src, tgt: (tf.cast(src_vocab_table.lookup(src), tf.int32),
-                          tf.cast(tgt_vocab_table.lookup(tgt), tf.int32)),
-        num_parallel_calls=num_parallel_calls)
-
-  src_tgt_dataset = src_tgt_dataset.prefetch(output_buffer_size)
+  src_tgt_dataset = src_tgt_dataset.map(
+      lambda src, tgt: (tf.cast(src_vocab_table.lookup(src), tf.int32),
+                        tf.cast(tgt_vocab_table.lookup(tgt), tf.int32)),
+      num_parallel_calls=num_parallel_calls).prefetch(output_buffer_size)
   # Create a tgt_input prefixed with <sos> and a tgt_output suffixed with <eos>.
   src_tgt_dataset = src_tgt_dataset.map(
       lambda src, tgt: (src,
@@ -172,20 +143,10 @@ def get_iterator(src_dataset,
                         tf.concat((tgt, [tgt_eos_id]), 0)),
       num_parallel_calls=num_parallel_calls).prefetch(output_buffer_size)
   # Add in sequence lengths.
-  if use_char_encode:
-    src_tgt_dataset = src_tgt_dataset.map(
-        lambda src, tgt_in, tgt_out: (
-            src, tgt_in, tgt_out,
-            tf.to_int32(tf.size(src) / vocab_utils.DEFAULT_CHAR_MAXLEN),
-            tf.size(tgt_in)),
-        num_parallel_calls=num_parallel_calls)
-  else:
-    src_tgt_dataset = src_tgt_dataset.map(
-        lambda src, tgt_in, tgt_out: (
-            src, tgt_in, tgt_out, tf.size(src), tf.size(tgt_in)),
-        num_parallel_calls=num_parallel_calls)
-
-  src_tgt_dataset = src_tgt_dataset.prefetch(output_buffer_size)
+  src_tgt_dataset = src_tgt_dataset.map(
+      lambda src, tgt_in, tgt_out: (
+          src, tgt_in, tgt_out, tf.size(src), tf.size(tgt_in)),
+      num_parallel_calls=num_parallel_calls).prefetch(output_buffer_size)
 
   # Bucket by source sequence length (buckets for lengths 0-9, 10-19, ...)
   def batching_func(x):

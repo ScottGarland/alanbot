@@ -1,6 +1,5 @@
 import sys
 import os
-from tensorflow.python.framework import ops
 sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 sys.path.append(os.path.realpath(os.path.dirname(__file__)) + "/nmt")
 import argparse
@@ -12,20 +11,7 @@ from core.sentence import score_answers, replace_in_answers
 import colorama
 import scoring
 import random
-import tflearn
-import random
-import discord
-from discord.ext import commands
-import nltk
-from nltk.stem.lancaster import LancasterStemmer
-stemmer = LancasterStemmer()
-nltk.download()
-import numpy
-# from tensorflow.python.framework import ops
-import json
-import pickle
-import tkinter
-from tkinter import  *
+
 
 current_stdout = None
 
@@ -216,118 +202,89 @@ def inference_internal(question):
     answers_rate = score_answers(answers, 'answers')
     return (answers, answers_rate)
 
-def bagOWords(string,words):
-    bag=[0 for _ in range(len(words))]
-    stringWords = nltk.word_tokenize(string)
-    stringWords =[stemmer.stem(word.lower()) for word in stringWords]
-
-    for x in stringWords:
-        for i, y in enumerate(words):
-            if y == x:
-                bag[i]=1
-    return numpy.array(bag)
-
 # interactive mode
 if __name__ == "__main__":
 
     print("\n\nStarting interactive mode (first response will take a while):")
     colorama.init()
-# Prototype Deep Neural Net Learning using tflearn
-    with open('library.json') as fp:
-        data = json.load(fp)
 
-    try:
-        with open("pickle.pickle","rb") as f:
-            words, labels, learning, output = pickle.load(f)
-    except:
-        #Creating arrays for  words labels and docx and docy
-        #docx list of patternes
-        #docy tag for words
-        words =[]
-        labels = []
-        docsx =[]
-        docsy=[]
-
-        #Stemming words for json library
-        for library in data["Library"]:
-            for pattern in library["patterns"]:
-                keyword = nltk.word_tokenize(pattern)
-                words.extend(keyword)
-                docsx.append(keyword)
-                docsy.append(library["tag"])
-
-                #if tag is in labels array do not add duplicates
-                if library["tag"] not in labels:
-                    labels.append(library["tag"])
-        words = [stemmer.stem(single.lower()) for single in words if single not in "?"]
-        words = sorted(list(set(words)))
-
-        labels = sorted(labels)
-
-        learning = []
-        output = []
-        emptyOut = [0 for _ in range(len(labels))]
-
-        # for loop over enumerate(docsx) to create a bag of words
-        for x, doc in enumerate(docsx):
-            bag = []
-
-            keyword = [stemmer.stem(single) for single in doc]
-            for single in words:
-                if single in keyword:
-                    bag.append(1)
-                else:
-                    bag.append(0)
-
-            outputRow = emptyOut[:]
-            outputRow[labels.index(docsy[x])] = 1
-            learning.append(bag)
-            output.append(outputRow)
-            with open("pickle.pickle","wb") as f:
-                pickle.dump((words, labels, learning, output),f)
-
-    learning = numpy.array(learning)
-    output = numpy.array(output)
-
-    ops.reset_default_graph()
-
-    net = tflearn.input_data(shape=[None, len(learning[0])])
-    net = tflearn.fully_connected(net, 8)
-    net = tflearn.fully_connected(net, 8)
-    net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
-    net = tflearn.regression(net)
-
-    model = tflearn.DNN(net)
-    model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
-    model.save("ChatbotModel.tflearn")
-        # QAs
+    # QAs
     while True:
         question = input("\n> ")
         answers, answers_rate = inference_internal(question)
         ans_score = {}
-        answers = inference_internal(question)[0]
+        for i, answer in enumerate(answers):
 
-        conclusion=model.predict([bagOWords(question,words)])[0]
-        conclusionIndex = numpy.argmax(conclusion)
-        tag = labels[conclusionIndex]
+            score = scoring.do_scoring(question, answer, answers_rate[i])
+            ans_score[answer] = score
 
-        # execute the main.py prototype
-        if conclusion[conclusionIndex] > 0.85:
-            for x in data["Library"]:
-                if x['tag'] == tag:
-                    responses =x['responses']
-            print(">"+random.choice(responses))
-        # execute the NMT Alanbot
-        else:
-            for i, answer in enumerate(answers):
+        scores = [v for k,v in ans_score.items()]
+        max_score = max(scores)
+        options = [k for k,v in ans_score.items() if v == max_score]
+        choice_answer = random.choice(options)
+        print("{}- {}{}".format(colorama.Fore.GREEN, choice_answer, colorama.Fore.RESET))
+        # maybe print the others? Anything else with a matching highscore green, yellow mid-range... red lowest? 
 
-                score = scoring.do_scoring(question, answer, answers_rate[i])
-                ans_score[answer] = score
 
-            scores = [v for k,v in ans_score.items()]
-            max_score = max(scores)
-            options = [k for k,v in ans_score.items() if v == max_score]
-            choice_answer = random.choice(options)
 
-            print(choice_answer)
-                # maybe print the others? Anything else with a matching highscore green, yellow mid-range... red lowest?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -69,7 +69,7 @@ with the latest research ideas. We achieve this goal by:
 
 We believe that it is important to provide benchmarks that people can easily
 replicate. As a result, we have provided full experimental results and
-pretrained our models on the following publicly available datasets:
+pretrained on models on the following publicly available datasets:
 
 1. *Small-scale*: English-Vietnamese parallel corpus of TED talks (133K sentence
    pairs) provided by
@@ -225,7 +225,7 @@ same weights; however, in practice, we often use two different RNN parameters
 encoder_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units)
 
 # Run Dynamic RNN
-#   encoder_outputs: [max_time, batch_size, num_units]
+#   encoder_outpus: [max_time, batch_size, num_units]
 #   encoder_state: [batch_size, num_units]
 encoder_outputs, encoder_state = tf.nn.dynamic_rnn(
     encoder_cell, encoder_emb_inp,
@@ -930,7 +930,7 @@ get its values, and initialize it.
 ``` python
 batched_iterator = batched_dataset.make_initializable_iterator()
 
-((source, source_lengths), (target, target_lengths)) = batched_iterator.get_next()
+((source, source_lengths), (target, target_lenghts)) = batched_iterator.get_next()
 
 # At initialization time.
 session.run(batched_iterator.initializer, feed_dict={...})
@@ -988,8 +988,7 @@ decoder = tf.contrib.seq2seq.BeamSearchDecoder(
         initial_state=decoder_initial_state,
         beam_width=beam_width,
         output_layer=projection_layer,
-        length_penalty_weight=0.0,
-        coverage_penalty_weight=0.0)
+        length_penalty_weight=0.0)
 
 # Dynamic decoding
 outputs, _ = tf.contrib.seq2seq.dynamic_decode(decoder, ...)

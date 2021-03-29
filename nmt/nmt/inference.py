@@ -80,32 +80,7 @@ def load_data(inference_input_file, hparams=None):
   return inference_data
 
 
-def get_model_creator(hparams):
-  """Get the right model class depending on configuration."""
-  if (hparams.encoder_type == "gnmt" or
-      hparams.attention_architecture in ["gnmt", "gnmt_v2"]):
-    model_creator = gnmt_model.GNMTModel
-  elif hparams.attention_architecture == "standard":
-    model_creator = attention_model.AttentionModel
-  elif not hparams.attention:
-    model_creator = nmt_model.Model
-  else:
-    raise ValueError("Unknown attention architecture %s" %
-                     hparams.attention_architecture)
-  return model_creator
-
-
-def start_sess_and_load_model(infer_model, ckpt_path):
-  """Start session and load model."""
-  sess = tf.Session(
-      graph=infer_model.graph, config=utils.get_config_proto())
-  with infer_model.graph.as_default():
-    loaded_infer_model = model_helper.load_model(
-        infer_model.model, ckpt_path, sess, "infer")
-  return sess, loaded_infer_model
-
-
-def inference(ckpt_path,
+def inference(ckpt,
               inference_input_file,
               inference_output_file,
               hparams,
@@ -116,34 +91,36 @@ def inference(ckpt_path,
   if hparams.inference_indices:
     assert num_workers == 1
 
-  model_creator = get_model_creator(hparams)
+  if not hparams.attention:
+    model_creator = nmt_model.Model
+  elif hparams.attention_architecture == "standard":
+    model_creator = attention_model.AttentionModel
+  elif hparams.attention_architecture in ["gnmt", "gnmt_v2"]:
+    model_creator = gnmt_model.GNMTModel
+  else:
+    raise ValueError("Unknown model architecture")
   infer_model = model_helper.create_infer_model(model_creator, hparams, scope)
-  sess, loaded_infer_model = start_sess_and_load_model(infer_model, ckpt_path)
 
   if num_workers == 1:
     single_worker_inference(
-        sess,
         infer_model,
-        loaded_infer_model,
+        ckpt,
         inference_input_file,
         inference_output_file,
         hparams)
   else:
     multi_worker_inference(
-        sess,
         infer_model,
-        loaded_infer_model,
+        ckpt,
         inference_input_file,
         inference_output_file,
         hparams,
         num_workers=num_workers,
         jobid=jobid)
-  sess.close()
 
 
-def single_worker_inference(sess,
-                            infer_model,
-                            loaded_infer_model,
+def single_worker_inference(infer_model,
+                            ckpt,
                             inference_input_file,
                             inference_output_file,
                             hparams):
@@ -153,7 +130,10 @@ def single_worker_inference(sess,
   # Read data
   infer_data = load_data(inference_input_file, hparams)
 
-  with infer_model.graph.as_default():
+  with tf.Session(
+      graph=infer_model.graph, config=utils.get_config_proto()) as sess:
+    loaded_infer_model = model_helper.load_model(
+        infer_model.model, ckpt, sess, "infer")
     sess.run(
         infer_model.iterator.initializer,
         feed_dict={
@@ -182,13 +162,11 @@ def single_worker_inference(sess,
           subword_option=hparams.subword_option,
           beam_width=hparams.beam_width,
           tgt_eos=hparams.eos,
-          num_translations_per_input=hparams.num_translations_per_input,
-          infer_mode=hparams.infer_mode)
+          num_translations_per_input=hparams.num_translations_per_input)
 
 
-def multi_worker_inference(sess,
-                           infer_model,
-                           loaded_infer_model,
+def multi_worker_inference(infer_model,
+                           ckpt,
                            inference_input_file,
                            inference_output_file,
                            hparams,
@@ -211,7 +189,10 @@ def multi_worker_inference(sess,
   end_position = min(start_position + load_per_worker, total_load)
   infer_data = infer_data[start_position:end_position]
 
-  with infer_model.graph.as_default():
+  with tf.Session(
+      graph=infer_model.graph, config=utils.get_config_proto()) as sess:
+    loaded_infer_model = model_helper.load_model(
+        infer_model.model, ckpt, sess, "infer")
     sess.run(infer_model.iterator.initializer,
              {
                  infer_model.src_placeholder: infer_data,
@@ -229,8 +210,7 @@ def multi_worker_inference(sess,
         subword_option=hparams.subword_option,
         beam_width=hparams.beam_width,
         tgt_eos=hparams.eos,
-        num_translations_per_input=hparams.num_translations_per_input,
-        infer_mode=hparams.infer_mode)
+        num_translations_per_input=hparams.num_translations_per_input)
 
     # Change file name to indicate the file writing is completed.
     tf.gfile.Rename(output_infer, output_infer_done, overwrite=True)
@@ -244,7 +224,7 @@ def multi_worker_inference(sess,
       for worker_id in range(num_workers):
         worker_infer_done = "%s_done_%d" % (inference_output_file, worker_id)
         while not tf.gfile.Exists(worker_infer_done):
-          utils.print_out("  waiting job %d to complete." % worker_id)
+          utils.print_out("  waitting job %d to complete." % worker_id)
           time.sleep(10)
 
         with codecs.getreader("utf-8")(

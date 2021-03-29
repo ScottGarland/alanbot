@@ -2,7 +2,6 @@
 # Matching sentences will remain untouched after tokenization
 # Any matched spaces will be removed
 # Make sure to return only one group as only first grup is used (rest of them are ignored)
-# Rules for 'standard' tokenizer
 
 # Period non-breaking prefixes
 (?:^|\s)(?i:(adj ?\.))
