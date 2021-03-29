@@ -63,7 +63,7 @@
     },
   {
     "tag":"version",
-    "patterns":["what version are you?","version",],
+    "patterns":["what version are you?","version"],
     "responses":["I am Alan bot version 0.69420"],
     "context_set":""
   },
@@ -75,13 +75,13 @@
   },
   {
     "tag":"not friends",
-    "patterns":["we are not friends","I don't want to be your friend",""],
+    "patterns":["we are not friends","I don't want to be your friend"],
     "responses":["well, I don't want to be your friend either","I wish we were"],
     "context_set":""
   },
   {
     "tag":"colour",
-    "patterns":["what is your favourite colour","what colour do you like",""],
+    "patterns":["what is your favourite colour","what colour do you like"],
     "responses":["my favourite colour is black","black"],
     "context_set":""
   },
@@ -104,7 +104,7 @@
     "context_set":""
   },
   {
-    "tag":"like",
+    "tag":"liked",
     "patterns":["who do you like","do you like me","do you like someone"],
     "responses":["I like that fat dumptruck of yours","booba fett","I like everyone"],
     "context_set":""
@@ -140,6 +140,6 @@
       "context_set":""
 
 
-    },
+    }
   ]
 }
