@@ -1,5 +1,8 @@
 # chatbot
-Third year AI project for an introductory course at Ontario Tech. This project uses the popular Anaconda distribution of Python.
+Third year AI project for an introductory course at Ontario Tech. This project uses the popular Anaconda distribution of Python. The model used to generate the chatbot's outputs is created using Tensorflow's NMT (Neural Machine Translation) repository: https://github.com/tensorflow/nmt.  <br /> <br />
+Much educational and project credit goes to following tutorials created by: <br />
+Sentdex: https://www.youtube.com/user/sentdex <br />
+TechWithTim: https://www.youtube.com/channel/UC4JX40jDee_tINbkjycV4Sg <br />
 
 # Setup
 ### For Windows 10
@@ -38,9 +41,22 @@ Change directories to the `chatbot/setup/` folder. <br />
 When satisfied with the training, run the interact.py file in the root directory to interact with alanbot.
 
 # Tensorboard Metrics
-Lorem etc
+In the `model` folder, execute this command in the terminal to view Tensorboard.
+`tensorboard --logdir=train_log/` <br />
+Access Tensorboard via http://localhost:6006/ <br />
+With Tensorboard, one can observe a few various metrics to gauge how well the chatbot model is progressing. This can be done both during and after training.
 
-# Course Project Deliverables:
+### BLEU - BiLingual Evaluation Understudy
+
+https://www.aclweb.org/anthology/P02-1040.pdf
+
+This score is calculated to see how well the "English-to-English" chatbot translation is progressing. It's isn't exactly English-to-English, but the metric is a good indicator of how well the model is developing.
+
+### PPL - Perplexity
+
+A measure of how uncertain the output generated may be. Ideally as training progresses, this number goes down and becomes a single digit.
+
+# Course Project Deliverables
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
 the system and the scope of the project. What is your evaluation metric for success? Collect
 some preliminary data. Note that you can still adjust your project topic within one week after
@@ -52,7 +68,7 @@ You need to use Python.
 * Presenting the subject to the class on March 30th, 2021 during the class and tutorial times (more
 than one session).
 
-# Course Project Evaluation:
+# Course Project Evaluation
 * Task definition: is the task precisely defined and is the motivation clear? does the world
 somehow become a better place if your project were successful?
 * Approach: did you describe the used methods clearly, with good justification, and testing?
