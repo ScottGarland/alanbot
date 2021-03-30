@@ -49,13 +49,18 @@ With Tensorboard, one can observe a few various metrics to gauge how well the ch
 
 ### BLEU - BiLingual Evaluation Understudy
 
+"BLEU: a Method for Automatic Evaluation of Machine Translation" <br />
 https://www.aclweb.org/anthology/P02-1040.pdf
 
 This score is calculated to see how well the "English-to-English" chatbot translation is progressing. It's isn't exactly English-to-English, but the metric is a good indicator of how well the model is developing.
 
+![Alt text](/img/dev_bleu_095.png?raw=true "Alan's BLEU through Training")
+
 ### PPL - Perplexity
 
 A measure of how uncertain the output generated may be. Ideally as training progresses, this number goes down and becomes a single digit.
+
+![Alt text](/img/dev_ppl_095.png?raw=true "Alan's PPL through Training")
 
 # Course Project Deliverables
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
@@ -81,6 +86,6 @@ way they did? Do you show concrete examples?
 at a good conference)?
 
 # Resources
-Tech with Tim: https://www.youtube.com/watch?v=wypVcNIH6D4&list=PLzMcBGfZo4-ndH9FoC4YWHGXG5RZekt-Q <br />
+Tech with Tim: https://www.techwithtim.net/tutorials/ai-chatbot/part-1/ <br />
 Sentdex: https://pythonprogramming.net/chatbot-deep-learning-python-tensorflow/ <br />
 Reddit Dataset Thread: https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_publicly_available_reddit_comment/ <br />
