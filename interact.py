@@ -1,38 +1,35 @@
-import os
 import sys
-
+import os
 from tensorflow.python.framework import ops
-
 sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 sys.path.append(os.path.realpath(os.path.dirname(__file__)) + "/nmt")
 import argparse
-import random
-
-import colorama
-import discord
-import nltk
-import tensorflow as tf
-import tflearn
-from discord.ext import commands
-from nltk.stem.lancaster import LancasterStemmer
-
-import scoring
-from core.sentence import replace_in_answers, score_answers
-from core.tokenizer import detokenize, tokenize
-from nmt import nmt
 from setup.settings import hparams, out_dir
-
+from nmt import nmt
+import tensorflow as tf
+from core.tokenizer import tokenize, detokenize
+from core.sentence import score_answers, replace_in_answers
+import colorama
+import scoring
+import random
+import tflearn
+import random
+import discord
+from discord.ext import commands
+import nltk
+from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 nltk.download()
+import numpy
 # from tensorflow.python.framework import ops
 import json
 import pickle
 import tkinter
-from tkinter import *
-
-import numpy
+from tkinter import  *
 
 current_stdout = None
+
+client = commands.Bot(command_prefix = '.')
 
 # That will not be as easy as training script, as code relies on input and output file in deep levels of code
 # It also outputs massive amount of info
@@ -306,33 +303,74 @@ if __name__ == "__main__":
     model.fit(learning, output, n_epoch=1000, batch_size=8, show_metric=True)
     model.save("ChatbotModel.tflearn")
         # QAs
-    while True:
-        question = input("\n> ")
-        answers, answers_rate = inference_internal(question)
-        ans_score = {}
-        answers = inference_internal(question)[0]
+    if(input()=='1'):
+        @client.command(aliases=['speak'])
+        async def talk(ctx,*,question):
+            answers, answers_rate = inference_internal(question)
+            ans_score={}
+            answers = inference_internal(question)[0]
+            conclusion=model.predict([bagOWords(question,words)])[0]
+            conclusionIndex = numpy.argmax(conclusion)
+            tag = labels[conclusionIndex]
 
-        conclusion=model.predict([bagOWords(question,words)])[0]
-        conclusionIndex = numpy.argmax(conclusion)
-        tag = labels[conclusionIndex]
+        	# execute the main.py prototype
+            if conclusion[conclusionIndex] > 0.7:
+                for x in data["Library"]:
+                    if x['tag'] == tag:
+                        responses =x['responses']
+                print(conclusion[conclusionIndex])
+                print(random.choice(responses))
+                await ctx.send(f'{random.choice(responses)}')
+        	# execute the NMT Alanbot
+            else:
+                for i, answer in enumerate(answers):
+                    score = scoring.do_scoring(question, answer, answers_rate[i])
+                    ans_score[answer] = score
+                scores = [v for k,v in ans_score.items()]
+                max_score = max(scores)
+                options = [k for k,v in ans_score.items() if v == max_score]
+                choice_answer = random.choice(options)
+                print(choice_answer)
+                await ctx.send(f'{choice_answer}')
 
-        # execute the main.py prototype
-        if conclusion[conclusionIndex] > 0.85:
-            for x in data["Library"]:
-                if x['tag'] == tag:
-                    responses =x['responses']
-            print(">"+random.choice(responses))
-        # execute the NMT Alanbot
-        else:
-            for i, answer in enumerate(answers):
+    else:
+        while True:
+            question = input("\n> ")
+            answers, answers_rate = inference_internal(question)
+            ans_score = {}
+            answers = inference_internal(question)[0]
 
-                score = scoring.do_scoring(question, answer, answers_rate[i])
-                ans_score[answer] = score
+            conclusion=model.predict([bagOWords(question,words)])[0]
+            conclusionIndex = numpy.argmax(conclusion)
+            tag = labels[conclusionIndex]
 
-            scores = [v for k,v in ans_score.items()]
-            max_score = max(scores)
-            options = [k for k,v in ans_score.items() if v == max_score]
-            choice_answer = random.choice(options)
+            if conclusion[conclusionIndex] > 0.7:
+                for x in data["Library"]:
+                    if x['tag'] == tag:
+                        responses =x['responses']
+                print(conclusion[conclusionIndex])
+                print(random.choice(responses))
+        	# execute the NMT Alanbot
+            else:
+        	    for i, answer in enumerate(answers):
 
-            print(choice_answer)
-                # maybe print the others? Anything else with a matching highscore green, yellow mid-range... red lowest?
+        	        score = scoring.do_scoring(question, answer, answers_rate[i])
+        	        ans_score[answer] = score
+
+        	    scores = [v for k,v in ans_score.items()]
+        	    max_score = max(scores)
+        	    options = [k for k,v in ans_score.items() if v == max_score]
+        	    choice_answer = random.choice(options)
+
+        	    print(choice_answer)
+        	        # maybe print the others? Anything else with a matching highscore green, yellow mid-range... red lowest?
+
+
+
+@client.event
+async def on_ready():
+	print('Bot is ready')
+
+
+
+client.run('ODIyMjU5MzY2OTE2MTI4Nzc4.YFPqtQ.LkeTmXJukZG0hEibSS6FNija2sM')
