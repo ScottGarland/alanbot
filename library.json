@@ -106,7 +106,7 @@
     {
       "tag":"liked",
       "patterns":["who do you like","do you like me","do you like someone"],
-      "responses":["I like that fat dumptruck of yours","booba fett","I like everyone"],
+      "responses":["I like you","boba fett","I like everyone"],
       "context_set":""
     },
     {
