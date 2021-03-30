@@ -104,12 +104,6 @@
       "context_set":""
     },
     {
-      "tag":"liked",
-      "patterns":["who do you like","do you like me","do you like someone"],
-      "responses":["I like you","boba fett","I like everyone"],
-      "context_set":""
-    },
-    {
       "tag":"subject",
       "patterns":["what is your favourite subject","what subject do you enjoy most","what subject do you like"],
       "responses":["Physics is my favourite"],
