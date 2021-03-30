@@ -26,12 +26,6 @@
       "context_set": ""
     },
     {
-      "tag":"talk",
-      "patterns":["how are you","how are you doing","how are you doing","how are you","how are you","how are you","how are you"],
-      "responses":["I am doing well and you?","everything is fine on my end, what about yours?"],
-      "context_set":""
-    },
-    {
       "tag":"like doing",
       "patterns":["What do you like doing?","what are your hobbies?","is there something you like?","what do you do?","what are your pastimes"],
       "responses":["I like to talk with new people and gain new experiences, what about you?","I like to learn new words and play games","My hobbies are playing games and learning new things"],
