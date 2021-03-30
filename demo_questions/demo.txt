@@ -1,15 +1,20 @@
 Hello
 How are you?
-Do you know Skynet?
-What's 2+2?
-What year is it?
-I love you
-<3
+What is your name?
 How old are you?
+What year is it?
+What's 2+2?
+Do you know Skynet?
 Nvidia or AMD?
+Microsoft or Apple?
 ┬─┬ノ(ಠ_ಠノ)
 What programming language should I learn?
 Is the universe infinite?
-Microsoft or Apple?
 What is the universe?
+What's the meaning of life?
 What is your opinion of humans?
+What are you eating?
+Where is your home?
+Where can I learn more about Machine Learning?
+I love you
+<3
