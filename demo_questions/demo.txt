@@ -3,7 +3,6 @@ How are you?
 What is your name?
 How old are you?
 What year is it?
-What's 2+2?
 Do you know Skynet?
 Nvidia or AMD?
 Microsoft or Apple?
