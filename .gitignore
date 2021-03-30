@@ -15,6 +15,7 @@ todo\.txt
 _files/
 pickle.pickle
 sentdex_lab
+comparisons
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

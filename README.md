@@ -54,13 +54,13 @@ https://www.aclweb.org/anthology/P02-1040.pdf
 
 This score is calculated to see how well the "English-to-English" chatbot translation is progressing. It's isn't exactly English-to-English, but the metric is a good indicator of how well the model is developing.
 
-![Alt text](/img/dev_bleu_095.png?raw=true "Alan's BLEU through Training")
+![Alt text](/figures/dev_bleu_095.png?raw=true "Alan's BLEU through Training")
 
 ### PPL - Perplexity
 
 A measure of how uncertain the output generated may be. Ideally as training progresses, this number goes down and becomes a single digit.
 
-![Alt text](/img/dev_ppl_095.png?raw=true "Alan's PPL through Training")
+![Alt text](/figures/dev_ppl_095.png?raw=true "Alan's PPL through Training")
 
 # Course Project Deliverables
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
