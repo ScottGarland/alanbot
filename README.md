@@ -27,7 +27,7 @@ Install the latest distribution of Anaconda making note of its installation loca
 `pip install -r requirements.txt` <br />
 `conda deactivate` to deactivate the environment. <br />
 
-This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to chatbot/raw_data. While in the root directory, use these next commands to prepare and process the data for training: <br />
+This project builds off the RC_2015-01.bz2 file which contains one month's worth of reddit comments (January 2015). To run this project, this file needs to be downloaded and extracted to `chatbot/raw_data`. While in the root directory, use these next commands to prepare and process the data for training: <br />
 
 `python alanbot_db.py` Builds the database .db file. <br />
 `python prep_training_data.py` Processes the data in the database and outputs .from and .to files. <br />
@@ -43,7 +43,7 @@ When satisfied with the training, run the interact.py file in the root directory
 # Tensorboard Metrics
 In the `model` folder, execute this command in the terminal to view Tensorboard: <br />
 `tensorboard --logdir=train_log/` <br />
-Access Tensorboard via http://localhost:6006/ <br /><br />
+Access Tensorboard via http://localhost:6006/
 
 With Tensorboard, one can observe a few various metrics to gauge how well the chatbot model is progressing. This can be done both during and after training.
 
