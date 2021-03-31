@@ -62,6 +62,12 @@ A measure of how uncertain the output generated may be. Ideally as training prog
 
 ![Alt text](/figures/dev_ppl_095.png?raw=true "Alan's PPL through Training")
 
+### Loss
+
+The number indicating how poorly a model's prediction was compared to a reference.
+
+![Alt text](/figures/train_loss_095.png?raw=true "Alan's Loss through Training")
+
 # Course Project Deliverables
 * Proposal (10%) (2 pages max) (Due on Feb. 7th 11:59pm): Define the input-output behavior of
 the system and the scope of the project. What is your evaluation metric for success? Collect
