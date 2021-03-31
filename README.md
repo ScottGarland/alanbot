@@ -38,7 +38,7 @@ Change directories to the `chatbot/setup/` folder. <br />
 `cd ../` <br />
 `python train.py` Executes the training. <br /><br />
 
-When satisfied with the training, run the interact.py file in the root directory to interact with alanbot.
+When satisfied with the training, run the interact.py file in the root directory to interact with Alan. Type '1' to turn on the Discord bot integration, and type anything else for the regular command line interface.
 
 # Tensorboard Metrics
 In the `model` folder, execute this command in the terminal to view Tensorboard: <br />
